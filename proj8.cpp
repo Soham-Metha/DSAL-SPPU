@@ -196,6 +196,7 @@ class OBST
 int main()
 {
     int k;
+    freopen("p8_i.txt", "r", stdin);
 
     OBST tree;
 
