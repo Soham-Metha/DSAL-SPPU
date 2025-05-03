@@ -19,143 +19,29 @@ class BinaryTree
     int ln;
     Node *tmp[1000];
 
-    BinaryTree(int arr[], int len)
-    {
-        if (!arr[0])
-            return;
+    BinaryTree(int arr[], int len);
 
-        ln = len;
+    BinaryTree(const BinaryTree &bt);
 
-        for (int i = len - 1; i >= 0; i--)
-        {
-            if (2 * i + 2 >= len)
-                tmp[i] = new Node(arr[i]);
-            else
-                tmp[i] = new Node(arr[i], tmp[2 * i + 1], tmp[2 * i + 2]);
-        }
+    void preRecur(Node *n);
 
-        root = tmp[0];
-        return;
-    }
+    void inRecur(Node *n);
 
-    BinaryTree(const BinaryTree &bt)
-    {
-        if (!bt.tmp[0])
-            return;
-        ln = bt.ln;
+    void postRecur(Node *n);
 
-        for (int i = ln - 1; i >= 0; i--)
-        {
-            if (2 * i + 2 >= ln)
-                tmp[i] = new Node(bt.tmp[i]->val);
-            else
-                tmp[i] = new Node(bt.tmp[i]->val, tmp[2 * i + 1], tmp[2 * i + 2]);
-        }
+    int getHeight();
 
-        root = tmp[0];
-        return;
-    }
+    int findHeight(Node *n, int v = 0);
 
-    void preRecur(Node *n)
-    {
-        if (n != NULL)
-        {
-            cout << n->val << " ";
-            preRecur(n->left);
-            preRecur(n->right);
-        }
-    }
+    void findInt();
 
-    void inRecur(Node *n)
-    {
-        if (n != NULL)
-        {
-            inRecur(n->left);
-            cout << n->val << " ";
-            inRecur(n->right);
-        }
-    }
+    void findExt();
 
-    void postRecur(Node *n)
-    {
-        if (n != NULL)
-        {
-            postRecur(n->left);
-            postRecur(n->right);
-            cout << n->val << " ";
-        }
-    }
+    void swap(Node *n);
 
-    int getHeight()
-    {
-        return findHeight(root) - 1;
-    }
+    BinaryTree operator=(BinaryTree bt);
 
-    int findHeight(Node *n, int v = 0)
-    {
-        if (n != NULL)
-        {
-            int a = findHeight(n->left, v + 1);
-            int b = findHeight(n->right, v + 1);
-            return max(a, b);
-        }
-        return v;
-    }
-
-    void findInt()
-    {
-        for (int i = 0; i < ln; i++)
-        {
-            Node *n = tmp[i];
-            if ((n->left) || (n->right))
-                cout << n->val << " ";
-        }
-    }
-
-    void findExt()
-    {
-        for (int i = 0; i < ln; i++)
-        {
-            Node *n = tmp[i];
-            if ((n->left) || (n->right))
-                continue;
-            cout << n->val << " ";
-        }
-    }
-
-    void swap(Node *n)
-    {
-        if (n != NULL)
-        {
-            Node *tmp = n->left;
-            n->left = n->right;
-            n->right = tmp;
-            swap(n->left);
-            swap(n->right);
-        }
-    }
-
-    BinaryTree operator=(BinaryTree bt)
-    {
-        return BinaryTree(bt);
-    }
-
-    int printTree(Node *n, int v = 0)
-    {
-        if (n != NULL)
-        {
-            int i;
-            for (i = 1; i < v; i++)
-                cout << "        ";
-            for (int j = 0; j < (v - i + 1); j++)
-                cout << "|-----> ";
-            cout << n->val << "\n";
-            int a = printTree(n->left, v + 1);
-            int b = printTree(n->right, v + 1);
-            return max(a, b);
-        }
-        return v;
-    }
+    int printTree(Node *n, int v = 0);
 };
 int main()
 {
@@ -245,3 +131,141 @@ int main()
 
 pict@pict-OptiPlex-SFF-Plus-7010:~/21448_DSAL/proj1/src$
  */
+
+BinaryTree::BinaryTree(int arr[], int len)
+{
+    if (!arr[0])
+        return;
+
+    ln = len;
+
+    for (int i = len - 1; i >= 0; i--)
+    {
+        if (2 * i + 2 >= len)
+            tmp[i] = new Node(arr[i]);
+        else
+            tmp[i] = new Node(arr[i], tmp[2 * i + 1], tmp[2 * i + 2]);
+    }
+
+    root = tmp[0];
+    return;
+}
+
+BinaryTree::BinaryTree(const BinaryTree &bt)
+{
+    if (!bt.tmp[0])
+        return;
+    ln = bt.ln;
+
+    for (int i = ln - 1; i >= 0; i--)
+    {
+        if (2 * i + 2 >= ln)
+            tmp[i] = new Node(bt.tmp[i]->val);
+        else
+            tmp[i] = new Node(bt.tmp[i]->val, tmp[2 * i + 1], tmp[2 * i + 2]);
+    }
+
+    root = tmp[0];
+    return;
+}
+
+void BinaryTree::preRecur(Node *n)
+{
+    if (n != NULL)
+    {
+        cout << n->val << " ";
+        preRecur(n->left);
+        preRecur(n->right);
+    }
+}
+
+void BinaryTree::inRecur(Node *n)
+{
+    if (n != NULL)
+    {
+        inRecur(n->left);
+        cout << n->val << " ";
+        inRecur(n->right);
+    }
+}
+
+void BinaryTree::postRecur(Node *n)
+{
+    if (n != NULL)
+    {
+        postRecur(n->left);
+        postRecur(n->right);
+        cout << n->val << " ";
+    }
+}
+
+int BinaryTree::getHeight()
+{
+    return findHeight(root) - 1;
+}
+
+int BinaryTree::findHeight(Node *n, int v = 0)
+{
+    if (n != NULL)
+    {
+        int a = findHeight(n->left, v + 1);
+        int b = findHeight(n->right, v + 1);
+        return max(a, b);
+    }
+    return v;
+}
+
+void BinaryTree::findInt()
+{
+    for (int i = 0; i < ln; i++)
+    {
+        Node *n = tmp[i];
+        if ((n->left) || (n->right))
+            cout << n->val << " ";
+    }
+}
+
+void BinaryTree::findExt()
+{
+    for (int i = 0; i < ln; i++)
+    {
+        Node *n = tmp[i];
+        if ((n->left) || (n->right))
+            continue;
+        cout << n->val << " ";
+    }
+}
+
+void BinaryTree::swap(Node *n)
+{
+    if (n != NULL)
+    {
+        Node *tmp = n->left;
+        n->left = n->right;
+        n->right = tmp;
+        swap(n->left);
+        swap(n->right);
+    }
+}
+
+BinaryTree BinaryTree::operator=(BinaryTree bt)
+{
+    return BinaryTree(bt);
+}
+
+int BinaryTree::printTree(Node *n, int v = 0)
+{
+    if (n != NULL)
+    {
+        int i;
+        for (i = 1; i < v; i++)
+            cout << "        ";
+        for (int j = 0; j < (v - i + 1); j++)
+            cout << "|-----> ";
+        cout << n->val << "\n";
+        int a = printTree(n->left, v + 1);
+        int b = printTree(n->right, v + 1);
+        return max(a, b);
+    }
+    return v;
+}
