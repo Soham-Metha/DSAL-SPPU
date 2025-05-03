@@ -37,9 +37,9 @@ class OBST
     double unsuccessfulProbablity[MAX];
     double successfulProbablity[MAX];
 
+  public:
     Node *root;
 
-  public:
     OBST()
     {
         root = NULL;
@@ -97,6 +97,46 @@ class OBST
                                                  // its left and right subtrees
                 ROOT[i][j] = mid;                // Root of the subtree is the node that gives the minimum cost
             }
+    }
+
+    Node *Construct_OBST(int lb, int ub)
+    {
+        Node *p;
+
+        if (lb == ub)
+        {
+            p = NULL;
+            return p;
+        }
+        p = new Node();
+        p->key = keys[ROOT[lb][ub]]; // Root node key is determined by the optimal root index stored in ROOT[i][j]
+        p->left = Construct_OBST(lb, ROOT[lb][ub] - 1); // Construct left subtree recursively
+        p->right = Construct_OBST(ROOT[lb][ub], ub);    // Construct right subtree recursively
+        return p;
+    }
+
+    void printTree(Node *n, int v = 0)
+    {
+        if (n == NULL)
+            return;
+
+        int i;
+        for (i = 1; i < v; i++)
+            cout << "        ";
+
+        for (int j = 0; j < (v - i + 1); j++)
+            cout << "|-----> ";
+
+        cout << n->key << "\n";
+
+        printTree(n->left, v + 1);
+        printTree(n->right, v + 1);
+    }
+
+    void obst()
+    {
+        Calculate_W_C_R();
+        int i, j;
 
         cout << "\nThe weight matrix WEIGHT:\n";
         for (i = 0; i <= keyCount; i++)
@@ -127,52 +167,12 @@ class OBST
                 cout << ROOT[i][j] << "\t";
             cout << "\n";
         }
+
+        cout << " COST = " << COST[0][keyCount] << endl << " WEIGHT = " << WEIGHT[0][keyCount] << endl;
+
+        root = Construct_OBST(0, keyCount);
     }
 
-    Node *Construct_OBST(int lb, int ub)
-    {
-        Node *p;
-
-        if (lb == ub)
-        {
-            p = NULL;
-            return p;
-        }
-        p = new Node();
-        p->key = keys[ROOT[lb][ub]]; // Root node key is determined by the optimal root index stored in ROOT[i][j]
-        p->left = Construct_OBST(lb, ROOT[lb][ub] - 1); // Construct left subtree recursively
-        p->right = Construct_OBST(ROOT[lb][ub], ub);    // Construct right subtree recursively
-        return p;
-    }
-
-	void printTree(Node *n, int v = 0)
-	{
-		if (n == NULL)
-			return;
-
-		int i;
-		for (i = 1; i < v; i++)
-			cout << "        ";
-
-		for (int j = 0; j < (v - i + 1); j++)
-			cout << "|-----> ";
-
-		cout << n->key << "\n";
-
-		printTree(n->left, v + 1);
-		printTree(n->right, v + 1);
-	}
-
-    void obst()
-    {
-
-        Calculate_W_C_R();
-
-        cout << "COST[0] = " << COST[0][keyCount] << " WEIGHT[0] = " << WEIGHT[0][keyCount] << endl;
-
-        cout << "The Least cost is: \n" << COST[0][keyCount] << endl;
-        root = Construct_OBST(0, keyCount); // Construct the optimal binary search tree using the root matrix ROOT
-    }
     void inp()
     {
         cout << "Enter number of keys:";
@@ -190,10 +190,6 @@ class OBST
             cout << "unsuccessfulProbablity" << i << "= ";
             cin >> unsuccessfulProbablity[i];
         }
-    }
-    Node *get()
-    {
-        return root;
     }
 };
 
@@ -214,7 +210,7 @@ int main()
             tree.obst(); // Calculate the optimal binary search tree and construct it
             break;
         case 2:
-            tree.printTree(tree.get(), 0); // Display the constructed tree
+            tree.printTree(tree.root);
             break;
         default:
             exit(0);
