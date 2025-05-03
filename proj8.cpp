@@ -3,6 +3,10 @@
 #include<queue>
 using namespace std;
 
+#define WEIGHT(i,j) table->table[i][j].weight
+#define COST(i,j) table->table[i][j].weight
+#define ROOT(i,j) table->table[i][j].weight
+
 class Node{
     public:
     int data;
@@ -30,15 +34,25 @@ class TNode{
     }
 };
 
+class Table {
+    public:
+    TNode **table;
+    Table(){};
+    Table(int n, int m) {
+        table = new TNode*[n];
+        for(int i=0; i<=n; i++)
+            table[i] = new TNode[m];
+    }
+};
+
 class OBST{
     Node *root; // Root of binary Tree
     int *keys;  // Keys k1, k2, k3, ..., kn
-    int *p;     // Successful probability p1, p2, p3, ..., pn
-    int *q;     // Unsuccessful probability q0, q1, q2, q3, ..., qn
+    int *successfullProbablity;     // Successful probability p1, p2, p3, ..., pn
+    int *unsuccessfullProbablity;     // Unsuccessful probability q0, q1, q2, q3, ..., qn
     int n;      // No. of nodes in binary tree
 
-    TNode **table;
-
+    Table *table;
 
     public:
     OBST(){
@@ -46,8 +60,8 @@ class OBST{
         cin>>n;
         
         keys = new int[n];
-        p = new int[n];
-        q = new int[n+1];
+        successfullProbablity = new int[n];
+        unsuccessfullProbablity = new int[n+1];
 
         cout<<"\nEnter Keys:\n";
         for(int i=0; i<n; i++){
@@ -58,20 +72,18 @@ class OBST{
         cout<<"\nEnter Successful Probabilities:\n";
         for(int i=0; i<n; i++){
             cout<<"P"<<i<<": ";
-            cin>>p[i];
+            cin>>successfullProbablity[i];
         }
 
         cout<<"\nEnter Unsuccessful Probabilities:\n";
         for(int i=0; i<=n; i++){
             cout<<"Q"<<i<<": ";
-            cin>>q[i];
+            cin>>unsuccessfullProbablity[i];
         }
 
         root = nullptr;
 
-        table = new TNode*[n+1];
-        for(int i=0; i<=n; i++)
-            table[i] = new TNode[n+1];
+        table = new Table(n+1,n+1); 
 
         createTree();
     }
@@ -80,9 +92,9 @@ class OBST{
 
         // Initializing digonal elements
         for(int i=0; i<=n; i++){
-            table[i][i].weight = q[i];
-            table[i][i].cost = 0;
-            table[i][i].root = 0;
+            WEIGHT(i,i) = unsuccessfullProbablity[i];
+            COST(i,i) = 0;
+            ROOT(i,i) = 0;
         }
 
 
@@ -91,20 +103,19 @@ class OBST{
             int j = i+gap;
 
             while(j<=n){
-                // Calculating Weights: W[i, j] = W[i, j-1] + p[j-1] + q[j]
-                table[i][j].weight = table[i][j-1].weight + p[j-1] + q[j];
+                WEIGHT(i,j) = WEIGHT(i,j-1) + successfullProbablity[j-1] + unsuccessfullProbablity[j];
 
                 // Calculating Cost: C[i, j] = min(C[i, k-1] + C[k, j]) + W[i, j]
                 // Where i<k<=j
                 // Also storing root
                 for(int k=i+1; k<=j; k++){
-                    int c = table[i][k-1].cost + table[k][j].cost;
-                    if(table[i][j].cost>c){
-                        table[i][j].root = k;
-                        table[i][j].cost = c;
+                    int c = COST(i,k-1) + COST(k,j);
+                    if(COST(i,j)>c){
+                        ROOT(i,j) = k;
+                        COST(i,j) = c;
                     }
                 }
-                table[i][j].cost+=table[i][j].weight;
+                COST(i,j)+=WEIGHT(i,j);
                 i++;
                 j++;
             }
@@ -119,7 +130,7 @@ class OBST{
         int j = n;
         int k = 0;
 
-        Node *newnode = new Node(keys[(table[i][j].root)-1], i, j);
+        Node *newnode = new Node(keys[(ROOT(i,j))-1], i, j);
         root  = newnode;
 
         queue<Node*> q;
@@ -132,23 +143,23 @@ class OBST{
             i = newnode->i;
             j = newnode->j;
 
-            k = table[i][j].root;
+            k = ROOT(i,j);
 
             if(k-1 != i){
-                Node* temp = new Node(keys[table[i][k-1].root-1], i, k-1);
+                Node* temp = new Node(keys[ROOT(i,k-1)-1], i, k-1);
                 newnode->left = temp;
                 q.push(temp);
             }else newnode->left = NULL;
 
             if(k!=j){
-                Node* temp = new Node(keys[table[k][j].root-1], k, j);
+                Node* temp = new Node(keys[ROOT(k,j)-1], k, j);
                 newnode->right = temp;
                 q.push(temp);
             }else newnode->right = NULL;
         }
         cout<<"\nTree Built\n";
         printBT("", root, false);
-        cout<<"\nCost of OBST: "<<table[0][n].cost;
+        cout<<"\nCost of OBST: "<<COST(0,n);
 
     }
 
@@ -165,23 +176,6 @@ class OBST{
             printBT( prefix + (isLeft ? "│   " : "    "), root->left, true);
             printBT( prefix + (isLeft ? "│   " : "    "), root->right, false);
         }
-    }
-
-    ~OBST() {
-        delete[] keys;
-        delete[] p;
-        delete[] q;
-        for (int i = 0; i <= n; i++)
-            delete[] table[i];
-        delete[] table;
-        deleteTree(root); // Recursively deletes the tree
-    }
-    
-    void deleteTree(Node* node) {
-        if (node == nullptr) return;
-        deleteTree(node->left);
-        deleteTree(node->right);
-        delete node;
     }
 
 };
