@@ -101,6 +101,8 @@ class OBST
         cout << "\nThe weight matrix WEIGHT:\n";
         for (i = 0; i <= keyCount; i++)
         {
+            for (j = 0; j < i; j++)
+                cout << "X" << " ";
             for (j = i; j <= keyCount; j++)
                 cout << WEIGHT[i][j] << " ";
             cout << "\n";
@@ -109,6 +111,8 @@ class OBST
         cout << "\nThe cost matrix COST:\n";
         for (i = 0; i <= keyCount; i++)
         {
+            for (j = 0; j < i; j++)
+                cout << "X" << " ";
             for (j = i; j <= keyCount; j++)
                 cout << COST[i][j] << " ";
             cout << "\n";
@@ -117,6 +121,8 @@ class OBST
         cout << ("\nThe root matrix ROOT:\n");
         for (i = 0; i <= keyCount; i++)
         {
+            for (j = 0; j <= i; j++)
+                cout << "X" << " ";
             for (j = i + 1; j <= keyCount; j++)
                 cout << ROOT[i][j] << " ";
             cout << "\n";
