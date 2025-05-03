@@ -200,7 +200,7 @@ int BinaryTree::getHeight()
     return findHeight(root) - 1;
 }
 
-int BinaryTree::findHeight(Node *n, int v = 0)
+int BinaryTree::findHeight(Node *n, int v)
 {
     if (n == NULL)
         return v;
@@ -247,7 +247,7 @@ BinaryTree BinaryTree::operator=(BinaryTree bt)
     return BinaryTree(bt);
 }
 
-int BinaryTree::printTree(Node *n, int v = 0)
+int BinaryTree::printTree(Node *n, int v)
 {
     if (n != NULL)
     {
