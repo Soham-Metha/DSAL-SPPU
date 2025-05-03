@@ -115,18 +115,19 @@ class OBST
         return p;
     }
 
-    void printTree(Node* n, string prefix = "\t", int depth = 0, bool isLast = true)
+    void printTree(Node *n, string prefix = "\t", int depth = 0, bool isLast = true)
     {
         if (!n)
             return;
 
         cout << prefix;
-        if (n != root) {
+        if (n != root)
+        {
             cout << (isLast ? "┗━━━━━━━┓ " : "┣━━━━━━━┓ ");
             prefix += isLast ? "\t" : "┃\t";
         }
 
-        cout <<"->" << n->key << endl;
+        cout << "->" << n->key << endl;
 
         printTree(n->left, prefix, depth + 1, false);
 
@@ -168,26 +169,26 @@ class OBST
             cout << "\n";
         }
 
-        cout << " COST = " << COST[0][keyCount] << endl << " WEIGHT = " << WEIGHT[0][keyCount] << endl;
+        cout << "\n COST = " << COST[0][keyCount] << endl << "\n WEIGHT = " << WEIGHT[0][keyCount] << endl;
 
         root = Construct_OBST(0, keyCount);
     }
 
     void inp()
     {
-        //cout << "Enter number of keys:";
+        // cout << "Enter number of keys:";
         cin >> keyCount;
-        //cout << " Enter keys" << endl;
+        // cout << " Enter keys" << endl;
         for (int i = 1; i <= keyCount; i++)
         {
 
             cin >> keys[i];
-            //cout << " probability = ";
+            // cout << " probability = ";
             cin >> successfulProbablity[i];
         }
         for (int i = 0; i <= keyCount; i++)
         {
-            //cout << "unsuccessfulProbablity " << i << "= ";
+            // cout << "unsuccessfulProbablity " << i << "= ";
             cin >> unsuccessfulProbablity[i];
         }
     }
@@ -202,7 +203,7 @@ int main()
 
     while (true)
     {
-        //cout << "1.Construct tree\n2.Display tree\n3.Exit\n";
+        // cout << "1.Construct tree\n2.Display tree\n3.Exit\n";
         cin >> k;
         switch (k)
         {
