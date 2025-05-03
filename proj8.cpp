@@ -4,8 +4,8 @@
 using namespace std;
 
 #define WEIGHT(i,j) table[i][j].weight
-#define COST(i,j) table[i][j].weight
-#define ROOT(i,j) table[i][j].weight
+#define COST(i,j) table[i][j].cost
+#define ROOT(i,j) table[i][j].root
 
 class Node{
     public:
