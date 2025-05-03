@@ -175,19 +175,19 @@ class OBST
 
     void inp()
     {
-        cout << "Enter number of keys:";
+        //cout << "Enter number of keys:";
         cin >> keyCount;
-        cout << " Enter keys" << endl;
+        //cout << " Enter keys" << endl;
         for (int i = 1; i <= keyCount; i++)
         {
 
             cin >> keys[i];
-            cout << " probability = ";
+            //cout << " probability = ";
             cin >> successfulProbablity[i];
         }
         for (int i = 0; i <= keyCount; i++)
         {
-            cout << "unsuccessfulProbablity" << i << "= ";
+            //cout << "unsuccessfulProbablity " << i << "= ";
             cin >> unsuccessfulProbablity[i];
         }
     }
@@ -202,7 +202,7 @@ int main()
 
     while (true)
     {
-        cout << "1.Construct tree\n2.Display tree\n3.Exit\n";
+        //cout << "1.Construct tree\n2.Display tree\n3.Exit\n";
         cin >> k;
         switch (k)
         {
