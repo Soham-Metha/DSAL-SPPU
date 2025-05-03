@@ -124,10 +124,9 @@ class OBST
         if (n != root) {
             cout << (isLast ? "┗━━━━━━━┓ " : "┣━━━━━━━┓ ");
             prefix += isLast ? "\t" : "┃\t";
-            prefix += "\033[37m";
         }
 
-        cout << n->key << endl;
+        cout <<"->" << n->key << endl;
 
         printTree(n->left, prefix, depth + 1, false);
 
