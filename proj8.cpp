@@ -127,7 +127,7 @@ class OBST
             prefix += isLast ? "\t" : "┃\t";
         }
 
-        cout << "->" << n->key << endl;
+        cout << n->key << endl;
 
         printTree(n->left, prefix, depth + 1, false);
 
