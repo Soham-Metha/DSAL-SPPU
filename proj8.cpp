@@ -102,9 +102,9 @@ class OBST
         for (i = 0; i <= keyCount; i++)
         {
             for (j = 0; j < i; j++)
-                cout << "X" << " ";
+                cout << "X" << "\t";
             for (j = i; j <= keyCount; j++)
-                cout << WEIGHT[i][j] << " ";
+                cout << WEIGHT[i][j] << "\t";
             cout << "\n";
         }
 
@@ -112,9 +112,9 @@ class OBST
         for (i = 0; i <= keyCount; i++)
         {
             for (j = 0; j < i; j++)
-                cout << "X" << " ";
+                cout << "X" << "\t";
             for (j = i; j <= keyCount; j++)
-                cout << COST[i][j] << " ";
+                cout << COST[i][j] << "\t";
             cout << "\n";
         }
 
@@ -122,9 +122,9 @@ class OBST
         for (i = 0; i <= keyCount; i++)
         {
             for (j = 0; j <= i; j++)
-                cout << "X" << " ";
+                cout << "X" << "\t";
             for (j = i + 1; j <= keyCount; j++)
-                cout << ROOT[i][j] << " ";
+                cout << ROOT[i][j] << "\t";
             cout << "\n";
         }
     }
