@@ -145,16 +145,24 @@ class OBST
         return p;
     }
 
-    void display(Node *ROOT, int nivel)
-    {
-        if (ROOT != 0)
-        {
-            display(ROOT->left, nivel + 1);
-            cout << ROOT->key << endl;
-            display(ROOT->right, nivel + 1);
-            // Display the tree in an inorder traversal (left subtree, root, right subtree)
-        }
-    }
+	void printTree(Node *n, int v = 0)
+	{
+		if (n == NULL)
+			return;
+
+		int i;
+		for (i = 1; i < v; i++)
+			cout << "        ";
+
+		for (int j = 0; j < (v - i + 1); j++)
+			cout << "|-----> ";
+
+		cout << n->key << "\n";
+
+		printTree(n->left, v + 1);
+		printTree(n->right, v + 1);
+	}
+
     void obst()
     {
 
@@ -206,7 +214,7 @@ int main()
             tree.obst(); // Calculate the optimal binary search tree and construct it
             break;
         case 2:
-            tree.display(tree.get(), 0); // Display the constructed tree
+            tree.printTree(tree.get(), 0); // Display the constructed tree
             break;
         default:
             exit(0);
