@@ -1,177 +1,203 @@
-#include<iostream>
-#include<limits>
-#include<queue>
+
+#include <bits/stdc++.h>
 using namespace std;
+#define MAX 20
 
-#define WEIGHT(i,j) table[i][j].weight
-#define COST(i,j) table[i][j].cost
-#define ROOT(i,j) table[i][j].root
+class Node
+{
+    int key;
+    Node *left, *right;
+    friend class OBST;
 
-class Node{
-    public:
-    int data;
-    Node* left;
-    Node* right;
-    int i;
-    int j;
-    Node(int d, int i, int j){
-        data = d;
-        left = nullptr;
-        right = nullptr;
-        this->i = i;
-        this->j = j;
+  public:
+    Node()
+    {
+        key = 0;
+        left = NULL;
+        right = NULL;
+    }
+    Node(int k)
+    {
+        key = k;
+        left = NULL;
+        right = NULL;
     }
 };
 
-class TNode{
-    public:
-    int root;
-    int cost;
-    int weight;
+class OBST
+{
+    int keys[MAX]; // Array to store the actual keys
+    int keyCount;
 
-    TNode(){
-        cost = weight = root = numeric_limits<int>::max();
-    }
-};
+    double WEIGHT[MAX][MAX]; // Weight of subree spanning from [i] to [j]
+    double COST[MAX][MAX];   // The minimum cost for keys between [i+1] and [j].
+    int ROOT[MAX][MAX];      // ROOT key that gives min cost for keys between [i+1] and [j].
+                             // ROOT key is index of 'keys' array
 
-class OBST{
-    Node *root; // Root of binary Tree
-    int *keys;  // Keys k1, k2, k3, ..., kn
-    int *successfullProbablity;     // Successful probability p1, p2, p3, ..., pn
-    int *unsuccessfullProbablity;     // Unsuccessful probability q0, q1, q2, q3, ..., qn
-    int n;      // No. of nodes in binary tree
+    double unsuccessfulProbablity[MAX];
+    double successfulProbablity[MAX];
 
-    TNode **table;
+    Node *root;
 
-    public:
-    OBST(){
-        cout<<"\nEnter no. of nodes in tree: ";
-        cin>>n;
-        
-        keys = new int[n];
-        successfullProbablity = new int[n];
-        unsuccessfullProbablity = new int[n+1];
-
-        cout<<"\nEnter Keys:\n";
-        for(int i=0; i<n; i++){
-            cout<<"Key K"<<i<<": ";
-            cin>>keys[i];
-        }
-
-        cout<<"\nEnter Successful Probabilities:\n";
-        for(int i=0; i<n; i++){
-            cout<<"P"<<i<<": ";
-            cin>>successfullProbablity[i];
-        }
-
-        cout<<"\nEnter Unsuccessful Probabilities:\n";
-        for(int i=0; i<=n; i++){
-            cout<<"Q"<<i<<": ";
-            cin>>unsuccessfullProbablity[i];
-        }
-
-        root = nullptr;
-
-        table = new TNode*[n+1];
-        for(int i=0; i<=n; i++)
-            table[i] = new TNode[n+1];
-
-        createTree();
+  public:
+    OBST()
+    {
+        root = NULL;
     }
 
-    void initTable(){
+    void Calculate_W_C_R()
+    {
+        double x;
+        double min;
+        int i, j, k, h, m;
 
-        // Initializing digonal elements
-        for(int i=0; i<=n; i++){
-            WEIGHT(i,i) = unsuccessfullProbablity[i];
-            COST(i,i) = 0;
-            ROOT(i,i) = 0;
+        for (i = 0; i <= keyCount; i++)
+        {
+            WEIGHT[i][i] = unsuccessfulProbablity[i]; // Weight of a single node is its access probability (dummy key or
+                                                      // actual key)
+            for (j = i + 1; j <= keyCount; j++)
+                WEIGHT[i][j] =
+                    WEIGHT[i][j - 1] + successfulProbablity[j] +
+                    unsuccessfulProbablity[j]; // Weight of a subtree is the sum of its nodes' access probabilities
         }
 
-
-        for(int gap = 1; gap<=n; gap++){
-            int i = 0;
-            int j = i+gap;
-
-            while(j<=n){
-                WEIGHT(i,j) = WEIGHT(i,j-1) + successfullProbablity[j-1] + unsuccessfullProbablity[j];
-
-                // Calculating Cost: C[i, j] = min(C[i, k-1] + C[k, j]) + W[i, j]
-                // Where i<k<=j
-                // Also storing root
-                for(int k=i+1; k<=j; k++){
-                    int c = COST(i,k-1) + COST(k,j);
-                    if(COST(i,j)>c){
-                        ROOT(i,j) = k;
-                        COST(i,j) = c;
+        for (i = 0; i <= keyCount; i++)
+            COST[i][i] = WEIGHT[i][i]; // Cost of a single node is its weight
+        for (i = 0; i <= keyCount - 1; i++)
+        {
+            j = i + 1;
+            COST[i][j] =
+                COST[i][i] + COST[j][j] +
+                WEIGHT[i][j]; // Cost of a subtree with two nodes is the sum of the nodes' weights and the root weight
+            ROOT[i][j] = j;   // Root of the subtree with two nodes is the second node
+        }
+        for (h = 2; h <= keyCount; h++)
+            for (i = 0; i <= keyCount - h; i++)
+            {
+                j = i + h;
+                m = ROOT[i][j - 1];
+                min = COST[i][m - 1] + COST[m][j];
+                for (k = m + 1; k <= ROOT[i + 1][j]; k++)
+                {
+                    x = COST[i][k - 1] + COST[k][j];
+                    if (x < min)
+                    {
+                        m = k;
+                        min = x;
                     }
                 }
-                COST(i,j)+=WEIGHT(i,j);
-                i++;
-                j++;
+                COST[i][j] = WEIGHT[i][j] + min; // Cost of the subtree is the sum of its weight and the minimum cost of
+                                                 // its left and right subtrees
+                ROOT[i][j] = m;                  // Root of the subtree is the node that gives the minimum cost
             }
-        }
 
-    }
-
-    void createTree(){
-        initTable();
-
-        int i = 0;
-        int j = n;
-        int k = 0;
-
-        Node *newnode = new Node(keys[(ROOT(i,j))-1], i, j);
-        root  = newnode;
-
-        queue<Node*> q;
-        q.push(newnode);
-
-        while(!q.empty()){
-            newnode = q.front();
-            q.pop();
-
-            i = newnode->i;
-            j = newnode->j;
-
-            k = ROOT(i,j);
-
-            if(k-1 != i){
-                Node* temp = new Node(keys[ROOT(i,k-1)-1], i, k-1);
-                newnode->left = temp;
-                q.push(temp);
-            }else newnode->left = NULL;
-
-            if(k!=j){
-                Node* temp = new Node(keys[ROOT(k,j)-1], k, j);
-                newnode->right = temp;
-                q.push(temp);
-            }else newnode->right = NULL;
-        }
-        cout<<"\nTree Built\n";
-        printBT("", root, false);
-        cout<<"\nCost of OBST: "<<COST(0,n);
-
-    }
-
-    void printBT(const string& prefix, const Node* root, bool isLeft)
-    {
-        if( root != nullptr )
+        cout << "\nThe weight matrix WEIGHT:\n";
+        for (i = 0; i <= keyCount; i++)
         {
-            cout << prefix;
+            for (j = i; j <= keyCount; j++)
+                cout << WEIGHT[i][j] << " ";
+            cout << "\n";
+        }
 
-            cout << (isLeft ? "├──" : "└──" );
+        cout << "\nThe cost matrix COST:\n";
+        for (i = 0; i <= keyCount; i++)
+        {
+            for (j = i; j <= keyCount; j++)
+                cout << COST[i][j] << " ";
+            cout << "\n";
+        }
 
-            cout << root->data << std::endl;
-
-            printBT( prefix + (isLeft ? "│   " : "    "), root->left, true);
-            printBT( prefix + (isLeft ? "│   " : "    "), root->right, false);
+        cout << ("\nThe root matrix ROOT:\n");
+        for (i = 0; i <= keyCount; i++)
+        {
+            for (j = i + 1; j <= keyCount; j++)
+                cout << ROOT[i][j] << " ";
+            cout << "\n";
         }
     }
 
+    Node *Construct_OBST(int i, int j)
+    {
+        Node *p;
+
+        if (i == j)
+            p = NULL;
+        else
+        {
+            p = new Node();
+            p->key = keys[ROOT[i][j]]; // Root node key is determined by the optimal root index stored in ROOT[i][j]
+            p->left = Construct_OBST(i, ROOT[i][j] - 1); // Construct left subtree recursively
+            p->right = Construct_OBST(ROOT[i][j], j);    // Construct right subtree recursively
+        }
+        return p;
+    }
+
+    void display(Node *ROOT, int nivel)
+    {
+        if (ROOT != 0)
+        {
+            display(ROOT->left, nivel + 1);
+            cout << ROOT->key << endl;
+            display(ROOT->right, nivel + 1);
+            // Display the tree in an inorder traversal (left subtree, root, right subtree)
+        }
+    }
+    void obst()
+    {
+
+        Calculate_W_C_R();
+
+        cout << "COST[0] = " << COST[0][keyCount] << " WEIGHT[0] = " << WEIGHT[0][keyCount] << endl;
+
+        cout << "The Least cost is: \n" << COST[0][keyCount] << endl;
+        root = Construct_OBST(0, keyCount); // Construct the optimal binary search tree using the root matrix ROOT
+    }
+    void inp()
+    {
+        cout << "Enter number of keys:";
+        cin >> keyCount;
+        cout << " Enter keys" << endl;
+        for (int i = 1; i <= keyCount; i++)
+        {
+
+            cin >> keys[i];
+            cout << " probability = ";
+            cin >> successfulProbablity[i];
+        }
+        for (int i = 0; i <= keyCount; i++)
+        {
+            cout << "unsuccessfulProbablity" << i << "= ";
+            cin >> unsuccessfulProbablity[i];
+        }
+    }
+    Node *get()
+    {
+        return root;
+    }
 };
 
-int main(){
-    OBST t;
+int main()
+{
+    int k;
+
+    OBST tree;
+
+    while (true)
+    {
+        cout << "1.Construct tree\n2.Display tree\n3.Exit\n";
+        cin >> k;
+        switch (k)
+        {
+        case 1:
+            tree.inp();  // Input the number of keys, their access probabilities, and dummy key access probabilities
+            tree.obst(); // Calculate the optimal binary search tree and construct it
+            break;
+        case 2:
+            tree.display(tree.get(), 0); // Display the constructed tree
+            break;
+        default:
+            exit(0);
+        }
+    }
     return 0;
 }
