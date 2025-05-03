@@ -53,16 +53,19 @@ class OBST
 
         for (i = 0; i <= keyCount; i++)
         {
-            WEIGHT[i][i] = unsuccessfulProbablity[i]; // Weight of a single node is its access probability (dummy key or
-                                                      // actual key)
+            WEIGHT[i][i] =
+                unsuccessfulProbablity[i]; // the weight from 'i' to 'i' itself is just the unsuccessful probablity
+
             for (j = i + 1; j <= keyCount; j++)
-                WEIGHT[i][j] =
-                    WEIGHT[i][j - 1] + successfulProbablity[j] +
-                    unsuccessfulProbablity[j]; // Weight of a subtree is the sum of its nodes' access probabilities
+                WEIGHT[i][j] =                 // weight from i to j
+                    WEIGHT[i][j - 1] +         // weight from i to j-1, NOTE: Base case 'j=i+1' is handled in previous statement
+                    successfulProbablity[j] +  // chances that node 'j' is the value we were searching for
+                    unsuccessfulProbablity[j]; // chances that the value we were searching for lies between 'i' and 'j'
         }
 
         for (i = 0; i <= keyCount; i++)
-            COST[i][i] = WEIGHT[i][i]; // Cost of a single node is its weight
+            COST[i][i] = WEIGHT[i][i]; // the cost from 'i' to 'i' itself is just the weight
+
         for (i = 0; i <= keyCount - 1; i++)
         {
             j = i + 1;
