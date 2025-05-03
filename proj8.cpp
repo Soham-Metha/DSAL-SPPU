@@ -49,7 +49,7 @@ class OBST
     {
         double x;
         double min;
-        int i, j, k, h, m;
+        int i, j, possibleNewMid, gap, mid;
 
         for (i = 0; i <= keyCount; i++)
         {
@@ -57,8 +57,8 @@ class OBST
                 unsuccessfulProbablity[i]; // the weight from 'i' to 'i' itself is just the unsuccessful probablity
 
             for (j = i + 1; j <= keyCount; j++)
-                WEIGHT[i][j] =                 // weight from i to j
-                    WEIGHT[i][j - 1] +         // weight from i to j-1, NOTE: Base case 'j=i+1' is handled in previous statement
+                WEIGHT[i][j] =         // weight from i to j
+                    WEIGHT[i][j - 1] + // weight from i to j-1, NOTE: Base case 'j=i+1' is handled in previous statement
                     successfulProbablity[j] +  // chances that node 'j' is the value we were searching for
                     unsuccessfulProbablity[j]; // chances that the value we were searching for lies between 'i' and 'j'
         }
@@ -66,32 +66,36 @@ class OBST
         for (i = 0; i <= keyCount; i++)
             COST[i][i] = WEIGHT[i][i]; // the cost from 'i' to 'i' itself is just the weight
 
+        // Calc cost for every possible combination of nodes possible
         for (i = 0; i <= keyCount - 1; i++)
         {
             j = i + 1;
             COST[i][j] =
                 COST[i][i] + COST[j][j] +
                 WEIGHT[i][j]; // Cost of a subtree with two nodes is the sum of the nodes' weights and the root weight
-            ROOT[i][j] = j;   // Root of the subtree with two nodes is the second node
+            ROOT[i][j] = j;
         }
-        for (h = 2; h <= keyCount; h++)
-            for (i = 0; i <= keyCount - h; i++)
+
+        for (gap = 2; gap <= keyCount; gap++)
+            for (i = 0; i <= keyCount - gap; i++)
             {
-                j = i + h;
-                m = ROOT[i][j - 1];
-                min = COST[i][m - 1] + COST[m][j];
-                for (k = m + 1; k <= ROOT[i + 1][j]; k++)
+                j = i + gap;
+                mid = ROOT[i][j - 1]; // Mid is the root node connecting i and j
+
+                min = COST[i][mid - 1] + COST[mid][j];
+
+                for (possibleNewMid = mid + 1; possibleNewMid <= ROOT[i + 1][j]; possibleNewMid++)
                 {
-                    x = COST[i][k - 1] + COST[k][j];
+                    x = COST[i][possibleNewMid - 1] + COST[possibleNewMid][j];
                     if (x < min)
                     {
-                        m = k;
+                        mid = possibleNewMid;
                         min = x;
                     }
                 }
                 COST[i][j] = WEIGHT[i][j] + min; // Cost of the subtree is the sum of its weight and the minimum cost of
                                                  // its left and right subtrees
-                ROOT[i][j] = m;                  // Root of the subtree is the node that gives the minimum cost
+                ROOT[i][j] = mid;                // Root of the subtree is the node that gives the minimum cost
             }
 
         cout << "\nThe weight matrix WEIGHT:\n";
@@ -119,19 +123,19 @@ class OBST
         }
     }
 
-    Node *Construct_OBST(int i, int j)
+    Node *Construct_OBST(int lb, int ub)
     {
         Node *p;
 
-        if (i == j)
-            p = NULL;
-        else
+        if (lb == ub)
         {
-            p = new Node();
-            p->key = keys[ROOT[i][j]]; // Root node key is determined by the optimal root index stored in ROOT[i][j]
-            p->left = Construct_OBST(i, ROOT[i][j] - 1); // Construct left subtree recursively
-            p->right = Construct_OBST(ROOT[i][j], j);    // Construct right subtree recursively
+            p = NULL;
+            return p;
         }
+        p = new Node();
+        p->key = keys[ROOT[lb][ub]]; // Root node key is determined by the optimal root index stored in ROOT[i][j]
+        p->left = Construct_OBST(lb, ROOT[lb][ub] - 1); // Construct left subtree recursively
+        p->right = Construct_OBST(ROOT[lb][ub], ub);    // Construct right subtree recursively
         return p;
     }
 
