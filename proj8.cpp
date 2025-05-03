@@ -115,22 +115,23 @@ class OBST
         return p;
     }
 
-    void printTree(Node *n, int v = 0)
+    void printTree(Node* n, string prefix = "\t", int depth = 0, bool isLast = true)
     {
-        if (n == NULL)
+        if (!n)
             return;
 
-        int i;
-        for (i = 1; i < v; i++)
-            cout << "        ";
+        cout << prefix;
+        if (n != root) {
+            cout << (isLast ? "┗━━━━━━━┓ " : "┣━━━━━━━┓ ");
+            prefix += isLast ? "\t" : "┃\t";
+            prefix += "\033[37m";
+        }
 
-        for (int j = 0; j < (v - i + 1); j++)
-            cout << "|-----> ";
+        cout << n->key << endl;
 
-        cout << n->key << "\n";
+        printTree(n->left, prefix, depth + 1, false);
 
-        printTree(n->left, v + 1);
-        printTree(n->right, v + 1);
+        printTree(n->right, prefix, depth + 1);
     }
 
     void obst()
