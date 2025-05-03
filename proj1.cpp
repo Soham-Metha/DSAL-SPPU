@@ -148,13 +148,13 @@ BinaryTree::BinaryTree(int arr[], int len)
     }
 
     root = tmp[0];
-    return;
 }
 
 BinaryTree::BinaryTree(const BinaryTree &bt)
 {
     if (!bt.tmp[0])
         return;
+
     ln = bt.ln;
 
     for (int i = ln - 1; i >= 0; i--)
@@ -166,37 +166,33 @@ BinaryTree::BinaryTree(const BinaryTree &bt)
     }
 
     root = tmp[0];
-    return;
 }
 
 void BinaryTree::preRecur(Node *n)
 {
-    if (n != NULL)
-    {
-        cout << n->val << " ";
-        preRecur(n->left);
-        preRecur(n->right);
-    }
+    if (n == NULL)
+        return;
+    cout << n->val << " ";
+    preRecur(n->left);
+    preRecur(n->right);
 }
 
 void BinaryTree::inRecur(Node *n)
 {
-    if (n != NULL)
-    {
-        inRecur(n->left);
-        cout << n->val << " ";
-        inRecur(n->right);
-    }
+    if (n == NULL)
+        return;
+    inRecur(n->left);
+    cout << n->val << " ";
+    inRecur(n->right);
 }
 
 void BinaryTree::postRecur(Node *n)
 {
-    if (n != NULL)
-    {
-        postRecur(n->left);
-        postRecur(n->right);
-        cout << n->val << " ";
-    }
+    if (n == NULL)
+        return;
+    postRecur(n->left);
+    postRecur(n->right);
+    cout << n->val << " ";
 }
 
 int BinaryTree::getHeight()
@@ -206,13 +202,11 @@ int BinaryTree::getHeight()
 
 int BinaryTree::findHeight(Node *n, int v = 0)
 {
-    if (n != NULL)
-    {
-        int a = findHeight(n->left, v + 1);
-        int b = findHeight(n->right, v + 1);
-        return max(a, b);
-    }
-    return v;
+    if (n == NULL)
+        return v;
+    int a = findHeight(n->left, v + 1);
+    int b = findHeight(n->right, v + 1);
+    return max(a, b);
 }
 
 void BinaryTree::findInt()
