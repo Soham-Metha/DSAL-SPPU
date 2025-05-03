@@ -169,7 +169,7 @@ class OBST
             cout << "\n";
         }
 
-        cout << "\n COST = " << COST[0][keyCount] << endl << "\n WEIGHT = " << WEIGHT[0][keyCount] << endl;
+        cout << "\n COST = " << COST[0][keyCount] << endl << "WEIGHT = " << WEIGHT[0][keyCount] <<"\n"<< endl;
 
         root = Construct_OBST(0, keyCount);
     }
