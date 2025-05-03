@@ -4,7 +4,7 @@ prefix=proj
 
 clear &&
 #build object file
-gcc $prefix$1.cpp -o $prefix$1
+g++ $prefix$1.cpp -o $prefix$1
 
 if [[ "$1" == "9" ]]; then
     nasm -f elf64   $prefix$1helper.asm &&
