@@ -3,9 +3,9 @@
 #include<queue>
 using namespace std;
 
-#define WEIGHT(i,j) table->table[i][j].weight
-#define COST(i,j) table->table[i][j].weight
-#define ROOT(i,j) table->table[i][j].weight
+#define WEIGHT(i,j) table[i][j].weight
+#define COST(i,j) table[i][j].weight
+#define ROOT(i,j) table[i][j].weight
 
 class Node{
     public:
@@ -34,17 +34,6 @@ class TNode{
     }
 };
 
-class Table {
-    public:
-    TNode **table;
-    Table(){};
-    Table(int n, int m) {
-        table = new TNode*[n];
-        for(int i=0; i<=n; i++)
-            table[i] = new TNode[m];
-    }
-};
-
 class OBST{
     Node *root; // Root of binary Tree
     int *keys;  // Keys k1, k2, k3, ..., kn
@@ -52,7 +41,7 @@ class OBST{
     int *unsuccessfullProbablity;     // Unsuccessful probability q0, q1, q2, q3, ..., qn
     int n;      // No. of nodes in binary tree
 
-    Table *table;
+    TNode **table;
 
     public:
     OBST(){
@@ -83,7 +72,9 @@ class OBST{
 
         root = nullptr;
 
-        table = new Table(n+1,n+1); 
+        table = new TNode*[n+1];
+        for(int i=0; i<=n; i++)
+            table[i] = new TNode[n+1];
 
         createTree();
     }
