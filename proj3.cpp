@@ -171,7 +171,7 @@ class ThreadedBinarySearchTree
         cout << prefix << "|---> " << (n ? to_string(n->value) : "NULL") << endl;
     }
 
-    void printTree(Node *n, string prefix = "        ")
+    void printTree(Node *n, string prefix = "       ")
     {
         if (!n)
             return;
