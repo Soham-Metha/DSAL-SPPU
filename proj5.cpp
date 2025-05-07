@@ -10,19 +10,19 @@
 
 using namespace std;
 
-template <typename T, typename U> class Node
+class Node
 {
   public:
-    T key;
-    U value;
+    int key;
+    string value;
     Node *next;
-    Node(T k, U v, Node *n) : key(k), value(v), next(n) {};
+    Node(int k, string v, Node *n) : key(k), value(v), next(n) {};
 };
 
-template <typename T, typename U> class HashTable
+class HashTable
 {
   public:
-    Node<T, U> *table[TABLE_SIZE];
+    Node *table[TABLE_SIZE];
 
     HashTable()
     {
@@ -30,19 +30,19 @@ template <typename T, typename U> class HashTable
             table[i] = NULL;
     }
 
-    void insert(T key, U val)
+    void insert(int key, string val)
     {
         int index;
         HASH_FUNC(key, index);
-        Node<T, U> *node = new Node(key, val, table[index]);
+        Node *node = new Node(key, val, table[index]);
         table[index] = node;
     }
 
-    void search(T key)
+    void search(int key)
     {
         int index;
         HASH_FUNC(key, index);
-        Node<T, U> *tmp = table[index];
+        Node *tmp = table[index];
 
         cout << "\n----------------------------SEARCHING--------------------------\n";
         while (tmp)
@@ -57,12 +57,12 @@ template <typename T, typename U> class HashTable
         cout << "\n\nKeyError : " << key << endl;
         exit(1);
     }
-    void remove(T key)
+    void remove(int key)
     {
         int index;
         HASH_FUNC(key, index);
 
-        Node<T, U> *tmp = table[index];
+        Node *tmp = table[index];
 
         cout << "\n----------------------------DELETION---------------------------\n";
         if (tmp->key == key)
@@ -93,7 +93,7 @@ template <typename T, typename U> class HashTable
             return;
 
         cout << "\n[     " << i << "     ]";
-        Node<T, U> *tmp = table[i];
+        Node *tmp = table[i];
         while (tmp)
         {
             cout << " |━| " << tmp->key << " ━━━ " << tmp->value;
@@ -108,7 +108,7 @@ template <typename T, typename U> class HashTable
 
 int main(int argc, char **argv)
 {
-    HashTable<int, string> tab;
+    HashTable tab;
     tab.insert(11, "eleven");
     tab.insert(12, "twelve");
     tab.insert(13, "thirteen");
