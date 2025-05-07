@@ -14,12 +14,6 @@ class Node
         left = right = NULL;
     }
 
-    Node()
-    {
-        data = 0;
-        left = right = NULL;
-    }
-
     friend class BST;
 };
 
