@@ -134,16 +134,16 @@ int main()
     table.insertWithoutReplacement("Soham", 9);
     table.insertWithoutReplacement("Ab", 1);
     table.insertWithoutReplacement("Ba", 2);
+    table.disp();
     table.lookup("Soham");
     table.lookup("Ab");
     table.lookup("Ba");
-    table.disp();
     table.insertWithReplacement("Ae", 3);
+    table.disp();
     table.lookup("Ae");
     table.lookup("Soham");
     table.lookup("Ab");
     table.lookup("Ba");
-    table.disp();
     cout << "\n";
     return 0;
 }
