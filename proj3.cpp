@@ -19,12 +19,14 @@ class Node
     }
     bool hasLeftChild()
     {
-        if (!left) return false;
+        if (!left)
+            return false;
         return !lthread;
     }
     bool hasRightChild()
     {
-        if (!right) return false;
+        if (!right)
+            return false;
         return !rthread;
     }
     void addLeft(int val)
@@ -57,15 +59,15 @@ class ThreadedBinarySearchTree
     ThreadedBinarySearchTree()
     {
         root = NULL;
-            int cnt;
-            cin >> cnt;
-            while (cnt > 0)
-            {
-                int tmp;
-                cin >> tmp;
-                insert(tmp);
-                cnt -= 1;
-            }
+        int cnt;
+        cin >> cnt;
+        while (cnt > 0)
+        {
+            int tmp;
+            cin >> tmp;
+            insert(tmp);
+            cnt -= 1;
+        }
     }
 
     Node *leftmost(Node *ptr)
@@ -145,9 +147,8 @@ class ThreadedBinarySearchTree
         getParentOf(root, val, &par, &tmp);
 
         if (tmp)
-        {
             assert(0 && "THE VALUE IS ALREADY PRESENT");
-        }
+
         if (val <= (par->value))
             return par->addLeft(val);
 
@@ -159,9 +160,7 @@ class ThreadedBinarySearchTree
         assert(root);
 
         for (Node *ptr = leftmost(root); ptr != NULL; ptr = inorderSuccessor(ptr))
-        {
             cout << ptr->value << " ";
-        }
     }
 
     void preorder()
