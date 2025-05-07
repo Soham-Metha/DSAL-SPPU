@@ -28,7 +28,7 @@ class BT
 
     Node *buildTree()
     {
-        cout << "\nData (-1:NULL) : ";
+        // cout << "\nData (-1:NULL) : ";
         int d;
         cin >> d;
 
@@ -38,9 +38,9 @@ class BT
         }
 
         Node *node = new Node(d);
-        cout << "Enter the value of node to the left of " << d << ":";
+        // cout << "Enter the value of node to the left of " << d << ":";
         node->left = buildTree();
-        cout << "Enter the value of node to the right of " << d << ":";
+        // cout << "Enter the value of node to the right of " << d << ":";
         node->right = buildTree();
 
         return node;
@@ -68,7 +68,7 @@ class BT
 
     void iinorder()
     {
-        cout << "Inorder Traversal:" << endl;
+        cout << "\nIterative Inorder Traversal:" << endl;
 
         string output = "";
 		stack<Node *> stk;
@@ -90,7 +90,7 @@ class BT
 
     void ipreorder()
     {
-        cout << "Preorder Traversal:" << endl;
+        cout << "\nIterative Preorder Traversal:" << endl;
         string output = "";
 		stack<Node *> stk;
 		stk.push(root);
@@ -108,8 +108,9 @@ class BT
 		cout << output;
     }
 
-    void ipostorder(Node *node)
+    void ipostorder()
     {
+        cout << "\nIterative Postorder Traversal:" << endl;
         string output = "";
         stack<Node *> stk;
         stk.push(root);
@@ -208,17 +209,24 @@ class BT
 int main()
 {
     BT tree;
-    tree.ipreorder();
+    cout << "Tree 1\n Inorder : ";
     tree.inorder(tree.root);
-    tree.ipostorder(tree.root);
+    cout << "\n Preorder : ";
+    tree.preorder(tree.root);
+    tree.ipreorder();
+    tree.ipostorder();
     tree.iinorder();
     cout << "Height: " << tree.printTreeAndFindHeight(tree.root);
+
     BT tree2 = tree;
-    tree2.ipreorder();
+    cout << "Tree 2\n Inorder : ";
     tree2.inorder(tree2.root);
-    tree2.ipostorder(tree2.root);
+    cout << "\n Preorder : ";
+    tree2.preorder(tree2.root);
+    tree2.ipreorder();
+    tree2.ipostorder();
     tree2.iinorder();
-    cout << "Height: " << tree.printTreeAndFindHeight(tree.root);
+    cout << "Height: " << tree2.printTreeAndFindHeight(tree2.root);
 
     return 0;
 }
