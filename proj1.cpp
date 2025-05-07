@@ -66,7 +66,7 @@ class BT
         inorder(node->right);
     }
 
-    void iinorder(Node *node)
+    void iinorder()
     {
         cout << "Inorder Traversal:" << endl;
 
@@ -208,6 +208,9 @@ int main()
 {
     BT tree;
     tree.ipreorder();
+    tree.inorder(tree.root);
+    tree.ipostorder(tree.root);
+    tree.iinorder();
     BT tree2 = tree;
     tree2.ipreorder();
 
