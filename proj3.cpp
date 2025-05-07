@@ -33,7 +33,7 @@ class Node
     {
         return !lthread;
     }
-    bool hasrightChild()
+    bool hasRightChild()
     {
         return !rthread;
     }
@@ -69,6 +69,38 @@ class ThreadedBinarySearchTree
         root = NULL;
     }
 
+    Node *leftmost(Node *ptr)
+    {
+        for (; ptr->hasLeftChild(); ptr = ptr->left)
+            ; // nothing
+        return ptr;
+    }
+
+    Node *rightmost(Node *ptr)
+    {
+        for (; ptr->hasRightChild(); ptr = ptr->left)
+            ; // nothing
+        return ptr;
+    }
+    Node *inorderSuccessor(Node *ptr)
+    {
+        if (ptr->rthread)
+            return ptr->right;
+
+        return leftmost(ptr->right);
+    }
+
+    Node *inorderPredecessor(Node *ptr)
+    {
+        if (ptr->lthread)
+            return ptr->left;
+
+        for (ptr = ptr->left; ptr->hasRightChild(); ptr = ptr->right)
+            ; // nothing
+
+        return ptr; // rightmost of ptr->left
+    }
+
     Node *getParentOf(Node *root, int val)
     {
         if (root == NULL)
@@ -86,7 +118,7 @@ class ThreadedBinarySearchTree
         if (val < root->value)
             return root;
 
-        if (root->hasrightChild())
+        if (root->hasRightChild())
             return getParentOf(root->right, val);
 
         return root;
@@ -106,32 +138,6 @@ class ThreadedBinarySearchTree
             return par->addLeft(val);
 
         par->addRight(val);
-    }
-
-    Node *inorderSuccessor(Node *ptr)
-    {
-        if (ptr->rthread == true)
-            return ptr->right;
-
-        return leftmost(ptr->right);
-    }
-
-    Node *inorderPredecessor(Node *ptr)
-    {
-        if (ptr->lthread == true)
-            return ptr->left;
-
-        for (ptr = ptr->left; ptr->hasrightChild(); ptr = ptr->right)
-            ; // nothing
-
-        return ptr; // rightmost of ptr->left
-    }
-
-    Node *leftmost(Node *ptr)
-    {
-        for (; ptr->hasLeftChild(); ptr = ptr->left)
-            ; // nothing
-        return ptr;
     }
 
     void inorder()
@@ -212,10 +218,10 @@ class ThreadedBinarySearchTree
         else
             return;
 
-        if (ptr->hasLeftChild() && ptr->hasrightChild())
+        if (ptr->hasLeftChild() && ptr->hasRightChild())
             caseC(par, ptr);
 
-        else if (ptr->hasLeftChild() || ptr->hasrightChild())
+        else if (ptr->hasLeftChild() || ptr->hasRightChild())
             caseB(par, ptr);
 
         else
@@ -254,7 +260,7 @@ class ThreadedBinarySearchTree
 
         if (ptr->hasLeftChild())
             p->right = s;
-        else if (ptr->hasrightChild())
+        else if (ptr->hasRightChild())
             s->left = p;
     }
     void caseC(Node *par, Node *ptr)
