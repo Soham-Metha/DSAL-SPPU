@@ -81,12 +81,10 @@ class HashTable
         for (int i = 0; i < TABLE_SIZE; i++)
         {
             cout << "\n[     " << i << "     ]";
-            Node *tmp = table[i];
-            while (tmp)
-            {
-                cout << " |━| " << tmp->key << " ━━━ " << tmp->value;
-                tmp = tmp->next;
-            }
+
+            for (Node *tmp = table[i]; tmp; tmp = tmp->next)
+                tmp->display();
+
             cout << endl;
         }
     }
