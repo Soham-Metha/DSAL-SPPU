@@ -70,41 +70,42 @@ class BT
     {
         cout << "Inorder Traversal:" << endl;
 
-        stack<Node *> stk;
-        Node *tmp = root;
-
-        while (!stk.empty() || tmp != NULL)
-        {
-            while (tmp != NULL)
-            {
-                stk.push(tmp);
-                tmp = tmp->left;
-            }
-            tmp = stk.top();
-            stk.pop();
-            cout << tmp->data + " ";
-            tmp = tmp->right;
-        }
+        string output = "";
+		stack<Node *> stk;
+		Node *tmp = root;
+		while (!stk.empty() || tmp != NULL)
+		{
+			while (tmp != NULL)
+			{
+				stk.push(tmp);
+				tmp = tmp->left;
+			}
+			tmp = stk.top();
+			stk.pop();
+			output = output + to_string(tmp->data) + " ";
+			tmp = tmp->right;
+		}
+		cout << output;
     }
 
     void ipreorder()
     {
         cout << "Preorder Traversal:" << endl;
-        stack<Node *> stk;
-        stk.push(root);
+        string output = "";
+		stack<Node *> stk;
+		stk.push(root);
 
-        while (!stk.empty())
-        {
-            Node *n = stk.top();
-            stk.pop();
-
-            cout << n->data << " ";
-
-            if (n->right)
-                stk.push(n->right);
-            if (n->left)
-                stk.push(n->left);
-        }
+		while (!stk.empty())
+		{
+			Node *n = stk.top();
+			stk.pop();
+			output = output + to_string(n->data) + " ";
+			if (n->right)
+				stk.push(n->right);
+			if (n->left)
+				stk.push(n->left);
+		}
+		cout << output;
     }
 
     void ipostorder(Node *node)
