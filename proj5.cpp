@@ -61,7 +61,7 @@ class HashTable
         if (tmp->key == key)
         {
             table[index] = tmp->next;
-            disp(index, false);
+            table[index]->display();
             return;
         }
 
@@ -70,7 +70,7 @@ class HashTable
             if (tmp->next->key == key)
             {
                 tmp->next = tmp->next->next;
-                disp(index, false);
+                table[index]->display();
                 return;
             }
             tmp = tmp->next;
@@ -80,7 +80,7 @@ class HashTable
         exit(1);
     }
 
-    void disp(int i = 0, bool recursive = true)
+    void disp(int i = 0)
     {
         if (i == TABLE_SIZE)
             return;
@@ -94,8 +94,7 @@ class HashTable
         }
         cout << endl;
 
-        if (recursive)
-            disp(i + 1);
+        disp(i + 1);
     }
 };
 
