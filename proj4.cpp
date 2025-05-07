@@ -9,7 +9,7 @@
 
 #define TABLE_SIZE 10
 #define NAME(INDEX) data[INDEX].name
-#define EXISTS(INDEX) (data[INDEX].name != "")
+#define EXISTS(INDEX) (data[INDEX].name != "NONE")
 #define SET(INDEX, NM, PH) data[INDEX].setData(NM, PH)
 
 using namespace std;
@@ -20,7 +20,7 @@ class UserData
     string name;
     long num;
 
-    UserData() : name(""), num(0) {};
+    UserData() : name("NONE"), num(0) {};
 
     UserData(string nm, long no) : name(nm), num(no) {};
 
