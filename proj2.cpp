@@ -21,6 +21,18 @@ class BST
 {
   public:
     Node *root = NULL;
+    BST()
+    {
+        int cnt;
+        cin >> cnt;
+        while (cnt > 0)
+        {
+            int tmp;
+            cin >> tmp;
+            insert(&root, tmp);
+            cnt -= 1;
+        }
+    }
     void insert(Node **n, int v)
     {
         // think of (*n) as the nodePtr(left/right, whichever is passed)
@@ -173,15 +185,6 @@ int main()
 {
 
     BST tree;
-    int cnt;
-    cin >> cnt;
-    while (cnt > 0)
-    {
-        int tmp;
-        cin >> tmp;
-        tree.insert(&tree.root, tmp);
-        cnt-=1;
-    }
     cout << "Tree : " << endl;
     tree.printTreeAndFindHeight(tree.root);
     cout << endl;
