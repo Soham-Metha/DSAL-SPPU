@@ -1,152 +1,129 @@
-#include <bits/stdc++.h>
+#include <assert.h>
+#include <iostream>
+#include <string.h>
+#define TABLE_SIZE 5
+
+#define HASH_FUNC(n, out)                                                                                              \
+    {                                                                                                                  \
+        out = n % TABLE_SIZE;                                                                                          \
+    }
+
 using namespace std;
 
-class Node {
-    string key, value;
+template <typename T, typename U> class Node
+{
+  public:
+    T key;
+    U value;
     Node *next;
-    friend class Dictionary;
+    Node(T k, U v, Node *n) : key(k), value(v), next(n) {};
+};
 
-    public:
-    Node(string k, string v) {
-        key = k;
-        value = v;
-        next = NULL;
+template <typename T, typename U> class HashTable
+{
+  public:
+    Node<T, U> *table[TABLE_SIZE];
+
+    HashTable()
+    {
+        for (size_t i = 0; i < TABLE_SIZE; i++)
+            table[i] = NULL;
+    }
+
+    void insert(T key, U val)
+    {
+        int index;
+        HASH_FUNC(key, index);
+        Node<T, U> *node = new Node(key, val, table[index]);
+        table[index] = node;
+    }
+
+    void search(T key)
+    {
+        int index;
+        HASH_FUNC(key, index);
+        Node<T, U> *tmp = table[index];
+
+        cout << "\n----------------------------SEARCHING--------------------------\n";
+        while (tmp)
+        {
+            if (tmp->key == key)
+            {
+                cout << "\nFound " << tmp->key << " : " << tmp->value << "\n";
+                return;
+            }
+            tmp = tmp->next;
+        }
+        cout << "\n\nKeyError : " << key << endl;
+        exit(1);
+    }
+    void remove(T key)
+    {
+        int index;
+        HASH_FUNC(key, index);
+
+        Node<T, U> *tmp = table[index];
+
+        cout << "\n----------------------------DELETION---------------------------\n";
+        if (tmp->key == key)
+        {
+            table[index] = tmp->next;
+            disp(index, false);
+            return;
+        }
+
+        while (tmp->next)
+        {
+            if (tmp->next->key == key)
+            {
+                tmp->next = tmp->next->next;
+                disp(index, false);
+                return;
+            }
+            tmp = tmp->next;
+        }
+
+        cout << "\n\nKeyError : " << key << endl;
+        exit(1);
+    }
+
+    void disp(int i = 0, bool recursive = true)
+    {
+        if (i == TABLE_SIZE)
+            return;
+
+        cout << "\n[     " << i << "     ]";
+        Node<T, U> *tmp = table[i];
+        while (tmp)
+        {
+            cout << " |━| " << tmp->key << " ━━━ " << tmp->value;
+            tmp = tmp->next;
+        }
+        cout << endl;
+
+        if (recursive)
+            disp(i + 1);
     }
 };
 
-class Dictionary {
+int main(int argc, char **argv)
+{
+    HashTable<int, string> tab;
+    tab.insert(11, "eleven");
+    tab.insert(12, "twelve");
+    tab.insert(13, "thirteen");
+    tab.insert(14, "fourteen");
+    tab.insert(15, "fifteen");
+    tab.insert(16, "sixteen");
+    tab.insert(21, "twenty one");
+    tab.insert(26, "twenty six");
 
-    Node **table;
-    int tablesize;
-
-    int hashfun(string value) {
-        int sum = 0;
-        for(char ch : value)
-            sum += (int)ch;
-        return sum % tablesize;
-    }
-
-    void insertLL(string key, string value) {
-        int hashAdd = hashfun(key);
-        if(table[hashAdd] == NULL) {
-            Node *newNode = new Node(key, value);
-            table[hashAdd] = newNode;
-        }
-        else {
-            insertLL(table[hashAdd], key, value);
-        }
-    }
-
-    void insertLL(Node *hashAdd, string key, string value) {
-        Node *curr = hashAdd;
-        Node *newNode = new Node(key, value);
-        while(curr -> next != NULL) {
-            curr = curr -> next;
-        }
-        curr -> next = newNode;
-    }
-
-    Node* findLL(Node *head, string key) {
-        Node *t = head;
-        while(t -> next != NULL) {
-            if(t -> key == key) {
-                return t;
-            }
-            t = t -> next;
-        }
-        if(t -> key == key) //For last element
-            return t;
-        else
-            return NULL; 
-    }
-
-    //to print each bucket (each slot of nodes) in the hash table
-    void printLL(Node *head) {
-        Node *t = head;
-        while(t != NULL) {
-            cout << t -> key << " " << t -> value << ",";
-            t = t -> next; 
-        }
-    }
-
-    void deleteLL(int index, Node *head, string key) {
-        if(head == NULL) 
-            cout << "Node does not exist" << endl;
-        else {
-            Node *temp = head, *prev = NULL;
-            
-            if(head -> key == key) {
-                Node *nextNode = head -> next;
-                delete head;
-                table[index] = nextNode;
-                cout << "Node deleted successfully" << endl;
-            }
-            else {
-                temp = head;
-                prev = NULL;
-                
-                while(temp != NULL) {
-                    if(temp -> key == key) {
-                        prev -> next = temp -> next;
-                        delete temp;
-                        cout << "Node deleted successfully" << endl;
-                        break;
-                    }
-                    prev = temp;
-                    temp = temp -> next;
-                }
-            }
-        }
-    }
-
-    public:
-    Dictionary(int n) {
-        tablesize = n;
-        table = new Node*[tablesize];
-        for(int i=0; i<tablesize; i++) {
-            table[i] = NULL;    
-        }
-    }
-
-    void insert(string key, string value) {
-        int index = hashfun(key);           //index a.k.a hashAddress
-        if(table[index] == NULL) {
-            Node *newNode = new Node(key, value);
-            table[index] = newNode;
-        }
-        else {
-            insertLL(table[index], key, value);
-        }
-    }
-
-    void print() {
-        for(int i=0; i<tablesize; i++) {
-            cout << " ";
-            printLL(table[i]);
-            cout << endl;
-        }
-    }
-
-    void search(string key) {
-        int hashAdd = hashfun(key);
-        Node *targetNode = findLL(table[hashAdd], key);
-        if(targetNode == NULL) {
-            cout << "Node does not exist." << endl;
-        }
-        else {
-            cout << "Node: " << targetNode->key << " " << targetNode->value << endl;
-        }
-    }
-
-    void del(string key) {
-        int hashAdd = hashfun(key);
-        deleteLL(hashAdd, table[hashAdd], key);
-    }
-};
-
-
-int main() {
-    
-
+    tab.disp();
+    tab.search(11);
+    // tab.search(25);
+    tab.remove(26);
+    tab.remove(11);
+    // tab.remove(26);
+    cout << "\n";
     return 0;
 }
