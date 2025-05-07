@@ -14,7 +14,7 @@ class Node
     Node(int k, string v, Node *n) : key(k), value(v), next(n) {};
     void display()
     {
-        cout << " { " << key << " : " << value << "}\t";
+        cout << " { " << key << " : " << value << " }\t";
     }
 };
 
