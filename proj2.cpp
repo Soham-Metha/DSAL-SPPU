@@ -196,6 +196,7 @@ int main()
         int tmp;
         cin >> tmp;
         tree.insert(&tree.root, tmp);
+        cnt-=1;
     }
     cout << "Tree : " << endl;
     tree.printTreeAndFindHeight(tree.root);
