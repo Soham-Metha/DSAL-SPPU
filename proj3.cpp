@@ -97,13 +97,10 @@ class ThreadedBinarySearchTree
         if (root->right && *root->right == val)
             return root;
 
-        // FIRST CHECK
-        if (val < root->value && root->hasLeftChild())
-            return getParentOf(root->left, val);
+        // CHECK BOTH 
         if (val < root->value)
-            return root;
-
-        if (root->hasRightChild())
+            return getParentOf(root->left, val);
+        else
             return getParentOf(root->right, val);
         return root;
     }
