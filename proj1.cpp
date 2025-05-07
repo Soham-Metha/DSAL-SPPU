@@ -217,6 +217,7 @@ int main()
     tree.ipostorder();
     tree.iinorder();
     int tmp;
+    cout << endl;
     tmp = tree.printTreeAndFindHeight(tree.root);
 
     BT tree2 = tree;
@@ -227,6 +228,7 @@ int main()
     tree2.ipreorder();
     tree2.ipostorder();
     tree2.iinorder();
+    cout << endl;
     tmp = tree2.printTreeAndFindHeight(tree2.root);
 
     return 0;
