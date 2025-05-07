@@ -19,10 +19,12 @@ class Node
     }
     bool hasLeftChild()
     {
+        if (!left) return false;
         return !lthread;
     }
     bool hasRightChild()
     {
+        if (!right) return false;
         return !rthread;
     }
     void addLeft(int val)
@@ -103,7 +105,6 @@ class ThreadedBinarySearchTree
             return;
         }
 
-        // IF SOME CHILD/THREAD EXISTS AND IT IS EQUAL TO VAL
         if (root->left && *root->left == val)
         {
             *parent = root;
@@ -117,11 +118,6 @@ class ThreadedBinarySearchTree
             return;
         }
 
-        // FOR BOTH POSSIBLITIES,
-        // CHECK IF CHILD EXISTS,
-        // IF yes, recursively check
-        // ELSE, node is not present in tree, but we
-        // found position where it can be inserted(current root)
         if (val < root->value && root->hasLeftChild())
             return getParentOf(root->left, val, parent, child);
         if (val < root->value)
@@ -179,9 +175,9 @@ class ThreadedBinarySearchTree
             Node *n = stk.top();
             stk.pop();
             output = output + to_string(n->value) + " ";
-            if (n->right && n->hasRightChild())
+            if (n->hasRightChild())
                 stk.push(n->right);
-            if (n->left && n->hasLeftChild())
+            if (n->hasLeftChild())
                 stk.push(n->left);
         }
         cout << output;
