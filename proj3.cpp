@@ -105,19 +105,16 @@ class ThreadedBinarySearchTree
 
         if (root->left && *root->left == val)
             return root;
-
         if (root->right && *root->right == val)
             return root;
 
         if (val < root->value && root->hasLeftChild())
             return getParentOf(root->left, val);
-
         if (val < root->value)
             return root;
 
         if (root->hasRightChild())
             return getParentOf(root->right, val);
-
         return root;
     }
 
@@ -174,7 +171,7 @@ class ThreadedBinarySearchTree
         cout << prefix << "|---> " << (n ? to_string(n->value) : "NULL") << endl;
     }
 
-    void printTree(Node *n, string prefix = "        ", int depth = 0)
+    void printTree(Node *n, string prefix = "        ")
     {
         if (!n)
             return;
@@ -192,12 +189,12 @@ class ThreadedBinarySearchTree
         if (n->lthread)
             displayThread(n->left, prefix);
         else
-            printTree(n->left, prefix, depth + 1);
+            printTree(n->left, prefix);
 
         if (n->rthread)
             displayThread(n->right, prefix);
         else
-            printTree(n->right, prefix, depth + 1);
+            printTree(n->right, prefix);
     }
 
     void delt(int dkey)
