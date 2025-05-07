@@ -7,7 +7,7 @@
 
 #include <iostream>
 #define TABLE_SIZE 10
-#define NAME(INDEX) data[INDEX].name
+#define NAME(INDEX) data[INDEX].getName()
 #define EXISTS(INDEX) data[INDEX].exists()
 #define SET(INDEX,NM,PH) data[INDEX].setData(NM,PH)
 using namespace std;
@@ -80,7 +80,7 @@ class HT
         int index = hash_func(nm);
         UserData dataAtIndex = data[index];
 
-        if (!dataAtIndex.exists())
+        if (!EXISTS(index))
         {
             SET(index,nm,ph);
             return index;
@@ -89,9 +89,9 @@ class HT
         int nextEmptyIndex = index;
         do
             nextEmptyIndex = (nextEmptyIndex + 1) % TABLE_SIZE;
-        while (nextEmptyIndex != index && data[nextEmptyIndex].exists());
+        while (nextEmptyIndex != index && EXISTS(nextEmptyIndex));
 
-        if (data[nextEmptyIndex].exists())
+        if (EXISTS(nextEmptyIndex))
             return -1;
 
         // check if the data at the index is in it's correct location
@@ -99,9 +99,9 @@ class HT
         // if so, insert the new data at the empty space
         // otherwise swap out the previos data
         cout << "\nInserting " << nm << " at ";
-        if (hash_func(dataAtIndex.getName()) == index)
+        if (hash_func(NAME(index)) == index)
         {
-            data[nextEmptyIndex].setData(nm, ph);
+            SET(nextEmptyIndex,nm,ph);
             cout << nextEmptyIndex << "\n";
             return nextEmptyIndex;
         }
