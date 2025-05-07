@@ -168,7 +168,7 @@ class ThreadedBinarySearchTree
 
     void displayThread(Node *n, string prefix)
     {
-        cout << prefix << "|-----> " << (n ? to_string(n->value) : "NULL") << endl;
+        cout << prefix << "|---> " << (n ? to_string(n->value) : "NULL") << endl;
     }
 
     void printTree(Node *n, string prefix = "        ", int depth = 0)
@@ -180,7 +180,7 @@ class ThreadedBinarySearchTree
 
         if (n != root)
         {
-            cout << "|---> ";
+            cout << "|-----> ";
             prefix += "        ";
         }
 
