@@ -165,7 +165,7 @@ class BST
 
     int getMaximum()
     {
-        
+
         Node *curr;
         for (curr = root; curr->left != NULL; curr = curr->right)
         {
@@ -189,17 +189,18 @@ int main()
 {
 
     BST tree;
-    tree.insert(&tree.root, 4);
-    tree.insert(&tree.root, 8);
-    tree.insert(&tree.root, 2);
-    tree.insert(&tree.root, 9);
-    tree.insert(&tree.root, 3);
-    tree.insert(&tree.root, 10);
-    tree.insert(&tree.root, 1);
+    int cnt;
+    cin >> cnt;
+    while (cnt > 0)
+    {
+        int tmp;
+        cin >> tmp;
+        tree.insert(&tree.root, tmp);
+    }
     cout << "Tree : " << endl;
     tree.printTreeAndFindHeight(tree.root);
     cout << endl;
-    cout << "Search 15 : " << (tree.search(tree.root,15) ? "true" : "false") << endl;
+    cout << "Search 15 : " << (tree.search(tree.root, 15) ? "true" : "false") << endl;
     cout << "Minimum : " << tree.getMinimum() << endl;
     cout << "Maximum : " << tree.getMaximum() << endl;
     tree.swap(tree.root);
