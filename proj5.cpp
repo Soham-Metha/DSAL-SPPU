@@ -67,7 +67,7 @@ class HashTable
         for (; tmp->next; tmp = tmp->next)
             if (tmp->next->key == key)
             {
-                tmp->display();
+                tmp->next->display();
                 tmp->next = tmp->next->next;
                 return;
             }
