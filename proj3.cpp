@@ -1,82 +1,81 @@
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <stack>
-#define REPEAT_STR(s, lb, ub)   \
-    {                           \
-        for (lb; lb < ub; lb++) \
-            cout << s;          \
+#define REPEAT_STR(s, lb, ub)                                                                                          \
+    {                                                                                                                  \
+        for (lb; lb < ub; lb++)                                                                                        \
+            cout << s;                                                                                                 \
     }
-#define REPEAT_ST(s, n)             \
-    {                               \
-        for (int i = 0; i < n; i++) \
-            cout << s;              \
+#define REPEAT_ST(s, n)                                                                                                \
+    {                                                                                                                  \
+        for (int i = 0; i < n; i++)                                                                                    \
+            cout << s;                                                                                                 \
     }
 
 using namespace std;
 
-class Node {
-public:
+class Node
+{
+  public:
     Node *left, *right;
     int value;
 
     bool lthread;
     bool rthread;
-    Node(int val)
-        : value(val)
-        , lthread(true)
-        , rthread(true)
-        , left(NULL)
-        , right(NULL) { };
-    Node(int val, Node* l, Node* r)
-        : value(val)
-        , lthread(true)
-        , rthread(true)
-        , left(l)
-        , right(r) { };
+    Node(int val) : value(val), lthread(true), rthread(true), left(NULL), right(NULL) {};
+    Node(int val, Node *l, Node *r) : value(val), lthread(true), rthread(true), left(l), right(r) {};
+
+    bool operator==(int val)
+    {
+        return value == val;
+    }
 };
 
-class ThreadedBinarySearchTree {
-public:
-    Node* root;
+class ThreadedBinarySearchTree
+{
+  public:
+    Node *root;
 
     ThreadedBinarySearchTree()
     {
         root = NULL;
     }
 
-    Node* getParentOf(Node* ptr, int val)
+    Node *getParentOf(Node *root, int val)
     {
-        if (ptr == NULL)
-            return ptr;
+        if (root == NULL)
+            return root;
 
-        if (ptr->left && ptr->left->value == val)
-            return ptr;
+        if (root->left && *root->left == val)
+            return root;
 
-        if (ptr->right && ptr->right->value == val)
-            return ptr;
+        if (root->right && *root->right == val)
+            return root;
 
-        if (val < ptr->value && ptr->lthread == false)
-            return getParentOf(ptr->left, val);
+        if (val < root->value && root->lthread == false)
+            return getParentOf(root->left, val);
 
-        else if (val < ptr->value)
-            return ptr;
+        if (val < root->value)
+            return root;
 
-        if (ptr->rthread == false)
-            return getParentOf(ptr->right, val);
-        else
-            return ptr;
+        if (root->rthread == false)
+            return getParentOf(root->right, val);
+
+        return root;
     }
 
     void insert(int val)
     {
-        if (root == NULL) {
+        if (root == NULL)
+        {
             root = new Node(val);
             return;
         }
 
-        Node* par = getParentOf(root, val);
+        Node *par = getParentOf(root, val);
 
-        if (val <= (par->value)) {
+        if (val <= (par->value))
+        {
             par->lthread = false;
             par->left = new Node(val, par->left, par);
             return;
@@ -85,54 +84,54 @@ public:
         par->right = new Node(val, par, par->right);
     }
 
-    Node* inorderSuccessor(Node* ptr)
+    Node *inorderSuccessor(Node *ptr)
     {
         if (ptr->rthread == true)
             return ptr->right;
 
         return leftmost(ptr->right);
     }
-    Node* inorderPredecessor(Node* ptr)
+
+    Node *inorderPredecessor(Node *ptr)
     {
         if (ptr->lthread == true)
             return ptr->left;
 
-        ptr = ptr->left;
-        while (ptr->rthread == false)
-            ptr = ptr->right;
-        return ptr;
+        for (ptr = ptr->left; ptr->rthread == false; ptr = ptr->right)
+            ; // nothing
+
+        return ptr; // rightmost of ptr->left
     }
 
-    Node* leftmost(Node* ptr)
+    Node *leftmost(Node *ptr)
     {
-        while (ptr->lthread == false)
-            ptr = ptr->left;
+        for (; ptr->lthread == false; ptr = ptr->left)
+            ; // nothing
         return ptr;
     }
 
     void inorder()
     {
-        if (root == NULL) {
-            printf("Tree is empty");
+        if (root == NULL)
+        {
             return;
         }
 
-        Node* ptr = leftmost(root);
-
-        while (ptr != NULL) {
-            printf("%d ", ptr->value);
-            ptr = inorderSuccessor(ptr);
+        for (Node *ptr = leftmost(root); ptr != NULL; ptr = inorderSuccessor(ptr))
+        {
+            cout << ptr->value << " ";
         }
     }
 
     void preorder()
     {
         string output = "";
-        stack<Node*> stk;
+        stack<Node *> stk;
         stk.push(root);
 
-        while (!stk.empty()) {
-            Node* n = stk.top();
+        while (!stk.empty())
+        {
+            Node *n = stk.top();
             stk.pop();
             output = output + to_string(n->value) + " ";
             if (n->right && !n->rthread)
@@ -143,23 +142,20 @@ public:
         cout << output;
     }
 
-    void displayThread(Node* n, string prefix, bool isLast = true)
+    void displayThread(Node *n, string prefix, bool isLast = true)
     {
-        cout << prefix
-             << "\033[37m"
-             << (isLast ? "┗━━━━━━ " : "┣━━━━━━ ")
-             << (n ? to_string(n->value) : "NULL")
-             << "\033[31m"
-             << endl;
+        cout << prefix << "\033[37m" << (isLast ? "┗━━━━━━ " : "┣━━━━━━ ") << (n ? to_string(n->value) : "NULL")
+             << "\033[31m" << endl;
     }
 
-    void printTree(Node* n, string prefix = "\t", int depth = 0, bool isLast = true)
+    void printTree(Node *n, string prefix = "\t", int depth = 0, bool isLast = true)
     {
         if (!n)
             return;
 
         cout << prefix;
-        if (n != root) {
+        if (n != root)
+        {
             cout << (isLast ? "┗━━━━━━━┓ " : "┣━━━━━━━┓ ");
             prefix += isLast ? "\t" : "┃\t";
             prefix += "\033[37m";
@@ -180,8 +176,8 @@ public:
 
     void delt(int dkey)
     {
-        Node* par = getParentOf(root, dkey);
-        Node* ptr = NULL;
+        Node *par = getParentOf(root, dkey);
+        Node *ptr = NULL;
 
         if (!par)
             return;
@@ -207,14 +203,16 @@ public:
         free(ptr);
     }
 
-    void caseA(Node* par, Node* ptr)
+    void caseA(Node *par, Node *ptr)
     {
-        if (par == NULL) {
+        if (par == NULL)
+        {
             root = NULL;
             return;
         }
 
-        if (ptr == par->left) {
+        if (ptr == par->left)
+        {
             par->lthread = true;
             par->left = ptr->left;
             return;
@@ -223,9 +221,9 @@ public:
         par->right = ptr->right;
     }
 
-    void caseB(Node* par, Node* ptr)
+    void caseB(Node *par, Node *ptr)
     {
-        Node* child = (ptr->lthread == false) ? ptr->left : ptr->right;
+        Node *child = (ptr->lthread == false) ? ptr->left : ptr->right;
 
         if (par == NULL)
             root = child;
@@ -234,8 +232,8 @@ public:
         else
             par->right = child;
 
-        Node* s = inorderSuccessor(ptr);
-        Node* p = inorderPredecessor(ptr);
+        Node *s = inorderSuccessor(ptr);
+        Node *p = inorderPredecessor(ptr);
 
         if (ptr->lthread == false)
             p->right = s;
@@ -243,12 +241,13 @@ public:
         else if (ptr->rthread == false)
             s->left = p;
     }
-    void caseC(Node* par, Node* ptr)
+    void caseC(Node *par, Node *ptr)
     {
-        Node* parentOfLeftMost = ptr;
+        Node *parentOfLeftMost = ptr;
 
-        Node* leftMost = ptr->right;
-        while (leftMost->left != NULL) {
+        Node *leftMost = ptr->right;
+        while (leftMost->left != NULL)
+        {
             parentOfLeftMost = leftMost;
             leftMost = leftMost->left;
         }
