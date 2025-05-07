@@ -11,6 +11,7 @@
 #define NAME(INDEX) data[INDEX].name
 #define EXISTS(INDEX) (data[INDEX].name != "NONE")
 #define SET(INDEX, NM, PH) data[INDEX].setData(NM, PH)
+#define DISPLAY(INDEX) data[INDEX].displayData()
 
 using namespace std;
 
@@ -113,12 +114,12 @@ class HT
 
         cout << "\nAT\t : " << index;
         if (NAME(index) == name)
-            data[index].displayData();
+            DISPLAY(index);
     }
     void disp(){
         cout << "\n ---TABLE--- ";
-        for(UserData tmp : data){
-            tmp.displayData();
+        for(int i = 0; i < TABLE_SIZE; i++){
+            cout << i; DISPLAY(i);
         }
         cout << "\n ---TABLE--- ";
     }
