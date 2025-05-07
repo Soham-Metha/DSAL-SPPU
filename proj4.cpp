@@ -116,10 +116,13 @@ class HT
         if (NAME(index) == name)
             DISPLAY(index);
     }
-    void disp(){
+    void disp()
+    {
         cout << "\n ---TABLE--- ";
-        for(int i = 0; i < TABLE_SIZE; i++){
-            cout << i; DISPLAY(i);
+        for (int i = 0; i < TABLE_SIZE; i++)
+        {
+            DISPLAY(i);
+            cout <<"\t"<< i;
         }
         cout << "\n ---TABLE--- ";
     }
