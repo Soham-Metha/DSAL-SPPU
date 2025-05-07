@@ -25,178 +25,151 @@ class Node
 
 class BST
 {
-    Node *root = NULL;
-
   public:
-    void insert(int d)
+    Node *root = NULL;
+    void insert(Node **n, int v)
     {
-        if (root == NULL)
+        // think of (*n) as the nodePtr(left/right, whichever is passed)
+
+        if ((*n) == NULL)
         {
-            root = new Node(d);
+            *n = new Node(v);
             return;
         }
-        // find the insert location
-        Node *curr = root, *prev;
-        while (curr != NULL)
-        {
-            if (d > curr->data)
-            {
-                prev = curr;
-                curr = curr->right;
-            }
-            else if (d < curr->data)
-            {
-                prev = curr;
-                curr = curr->left;
-            }
-            else
-            {
-                cout << d << " is already present in the BST";
-                return;
-            }
-        }
 
-        Node *newNode = new Node(d);
-        if (d > prev->data)
-        {
-            prev->right = newNode;
-        }
-        else
-        {
-            prev->left = newNode;
-        }
+        if (v <= (*n)->data)
+            return insert(&((*n)->left), v);
+
+        return insert(&((*n)->right), v);
     }
 
-    bool search(int d)
+    int search(Node *n, int target, int v = 0)
     {
-        if (root == NULL)
-        {
-            return false;
-        }
-        Node *curr = root;
+        if (!n)
+            return 0;
 
-        while (curr != NULL)
-        {
-            if (d > curr->data)
-            {
-                curr = curr->right;
-            }
-            else if (d < curr->data)
-            {
-                curr = curr->left;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        return false;
+        if (n->data == target)
+            return v + 1;
+
+        if (target < n->data)
+            return search(n->left, target, v + 1);
+
+        return search(n->right, target, v + 1);
     }
 
-    void preorder()
+    void iinorder()
     {
-        cout << "Preorder Traversal: ";
-        stack<Node *> st1;
-        Node *temp = root;
-        while (!st1.empty() || temp != NULL)
+        cout << "\nIterative Inorder Traversal : ";
+
+        string output = "";
+        stack<Node *> stk;
+        Node *tmp = root;
+        while (!stk.empty() || tmp != NULL)
         {
-            if (temp != NULL)
+            while (tmp != NULL)
             {
-                st1.push(temp);
-                cout << temp->data << " ";
-                temp = temp->left;
+                stk.push(tmp);
+                tmp = tmp->left;
             }
-            else
-            {
-                temp = st1.top();
-                st1.pop();
-                temp = temp->right;
-            }
+            tmp = stk.top();
+            stk.pop();
+            output = output + to_string(tmp->data) + " ";
+            tmp = tmp->right;
         }
+        cout << output;
     }
 
-    void inorder()
+    void ipreorder()
     {
-        cout << "Inorder Traversal: ";
-        stack<Node *> st1;
-        Node *temp = root;
-        while (!st1.empty() || temp != NULL)
+        cout << "\nIterative Preorder Traversal : ";
+        string output = "";
+        stack<Node *> stk;
+        stk.push(root);
+
+        while (!stk.empty())
         {
-            if (temp != NULL)
-            {
-                st1.push(temp);
-                temp = temp->left;
-            }
-            else
-            {
-                temp = st1.top();
-                st1.pop();
-                cout << temp->data << " ";
-                temp = temp->right;
-            }
+            Node *n = stk.top();
+            stk.pop();
+            output = output + to_string(n->data) + " ";
+            if (n->right)
+                stk.push(n->right);
+            if (n->left)
+                stk.push(n->left);
         }
+        cout << output;
     }
 
-    void postorder()
+    void ipostorder()
     {
-        stack<Node *> st1, st2;
-        st1.push(root);
-        while (!st1.empty())
-        {
-            Node *temp = st1.top();
-            st1.pop();
-            st2.push(temp);
+        cout << "\nIterative Postorder Traversal : ";
+        string output = "";
+        stack<Node *> stk;
+        stk.push(root);
 
-            if (temp->left)
-                st1.push(temp->left);
-            if (temp->right)
-                st1.push(temp->right);
-        }
-
-        while (!st2.empty())
+        while (!stk.empty())
         {
-            cout << st2.top()->data << " ";
-            st2.pop();
+            Node *n = stk.top();
+            stk.pop();
+            output = to_string(n->data) + " " + output;
+            if (n->left)
+                stk.push(n->left);
+            if (n->right)
+                stk.push(n->right);
         }
+        cout << output;
     }
 
-    Node *swapNodesRoot()
+    int printTreeAndFindHeight(Node *n, int v = 0)
     {
-        return swapNodes(root);
+        if (n == NULL)
+            return v;
+
+        int i;
+
+        for (i = 1; i < v; i++)
+            cout << "        ";
+
+        if (v > i - 1)
+            cout << "|-----> ";
+
+        cout << n->data << "\n";
+
+        int a = printTreeAndFindHeight(n->left, v + 1);
+        int b = printTreeAndFindHeight(n->right, v + 1);
+
+        return max(a, b);
     }
 
-    Node *swapNodes(Node *node)
+    void swap(Node *n)
     {
-        if (node == NULL)
-            return NULL;
-        if (node->left && node->right)
-        {
-            int temp = node->left->data;
-            node->left->data = node->right->data;
-            node->right->data = temp;
-        }
-        swapNodes(node->left);
-        swapNodes(node->right);
+        if (n == NULL)
+            return;
+
+        Node *tmp = n->left;
+        n->left = n->right;
+        n->right = tmp;
+
+        swap(n->left);
+        swap(n->right);
     }
 
     int getMinimum()
     {
-        Node *curr = root;
-
-        while (curr->left != NULL)
+        Node *curr;
+        for (curr = root; curr->left != NULL; curr = curr->left)
         {
-            curr = curr->left;
+            // nothing
         }
         return curr->data;
     }
 
     int getMaximum()
     {
-        Node *curr = root;
-
-        while (curr->right != NULL)
+        
+        Node *curr;
+        for (curr = root; curr->left != NULL; curr = curr->right)
         {
-            curr = curr->right;
+            // nothing
         }
         return curr->data;
     }
@@ -216,21 +189,21 @@ int main()
 {
 
     BST tree;
-    tree.insert(4);
-    tree.insert(8);
-    tree.insert(2);
-    tree.insert(9);
-    tree.insert(3);
-    tree.insert(10);
-    tree.insert(1);
+    tree.insert(&tree.root, 4);
+    tree.insert(&tree.root, 8);
+    tree.insert(&tree.root, 2);
+    tree.insert(&tree.root, 9);
+    tree.insert(&tree.root, 3);
+    tree.insert(&tree.root, 10);
+    tree.insert(&tree.root, 1);
     cout << "Tree : " << endl;
-    tree.inorder();
+    tree.printTreeAndFindHeight(tree.root);
     cout << endl;
-    cout << "Search 15 : " << (tree.search(15) ? "true" : "false") << endl;
+    cout << "Search 15 : " << (tree.search(tree.root,15) ? "true" : "false") << endl;
     cout << "Minimum : " << tree.getMinimum() << endl;
     cout << "Maximum : " << tree.getMaximum() << endl;
-    tree.swapNodesRoot();
+    tree.swap(tree.root);
     cout << "After swapping nodes: " << endl;
-    tree.inorder();
+    tree.printTreeAndFindHeight(tree.root);
     return 0;
 }
