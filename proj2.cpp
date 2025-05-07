@@ -167,7 +167,7 @@ class BST
     {
 
         Node *curr;
-        for (curr = root; curr->left != NULL; curr = curr->right)
+        for (curr = root; curr->right != NULL; curr = curr->right)
         {
             // nothing
         }
