@@ -32,7 +32,7 @@ class UserData
 
     void displayData()
     {
-        cout << "\n" << name << "\t : " << num << "\n";
+        cout << "\n" << name << "\t : " << num << "";
     }
 };
 
@@ -116,9 +116,11 @@ class HT
             data[index].displayData();
     }
     void disp(){
+        cout << "\n ---TABLE--- ";
         for(UserData tmp : data){
             tmp.displayData();
         }
+        cout << "\n ---TABLE--- ";
     }
 };
 
