@@ -272,12 +272,12 @@ class ThreadedBinarySearchTree
         cout << n->value << endl;
 
         if (n->lthread)
-            cout << prefix << "|-(T)-> " << (n ? to_string(n->value) : "NULL") << endl;
+            cout << prefix << "|-(LT)-> " << (n ? to_string(n->value) : "NULL") << endl;
         else
             printTree(n->left, prefix);
 
         if (n->rthread)
-            cout << prefix << "|-(T)-> " << (n ? to_string(n->value) : "NULL") << endl;
+            cout << prefix << "|-(RT)-> " << (n ? to_string(n->value) : "NULL") << endl;
         else
             printTree(n->right, prefix);
     }
