@@ -94,10 +94,6 @@ class HT
         if (EXISTS(nextEmptyIndex))
             return -1;
 
-        // check if the data at the index is in it's correct location
-        // i.e. if the hash value of previous data is equal to the index
-        // if so, insert the new data at the empty space
-        // otherwise swap out the previos data
         cout << "\nInserting " << nm << " at ";
         if (hash_func(NAME(index)) == index)
         {
@@ -120,10 +116,10 @@ class HT
 
         do
             index = (index + 1) % TABLE_SIZE;
-        while (index != strt && data[index].getName() != name);
+        while (index != strt && NAME(index) != name);
 
         cout << "\nAT\t :  " << index;
-        if (data[index].getName() == name)
+        if (NAME(index) == name)
             data[index].displayData();
     }
 };
