@@ -27,6 +27,12 @@ public:
         , rthread(true)
         , left(NULL)
         , right(NULL) { };
+    Node(int val, Node* l, Node* r)
+        : value(val)
+        , lthread(true)
+        , rthread(true)
+        , left(l)
+        , right(r) { };
 };
 
 class ThreadedBinarySearchTree {
