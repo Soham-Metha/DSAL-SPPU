@@ -1,208 +1,164 @@
+/*
+ * Consider telephone book database of N clients. Make use of a hash table implementation
+ * to quickly look up client‘s telephone number. Make use of two collision handling
+ * techniques and compare them using number of comparisons required to find a set of
+ * telephone numbers (Note: Use linear probing with replacement and without replace-ment)
+ */
+
 #include <iostream>
+#define TABLE_SIZE 10
+#define NAME(INDEX) data[INDEX].name
+#define EXISTS(INDEX) data[INDEX].exists()
+#define SET(INDEX,NM,PH) data[INDEX].setData(NM,PH)
 using namespace std;
-typedef long long ll;
 
-class Client {
-    ll phone;
+class UserData
+{
     string name;
+    long num;
 
-    bool isEmpty() {
-        return phone == 0;
+  public:
+    UserData() : name(""), num(0.0) {};
+
+    UserData(string nm, long no) : name(nm), num(no) {};
+
+    string getName()
+    {
+        return name;
     }
 
-    public:
-    Client() {
-        phone = 0;
-        name = "----";
+    bool exists()
+    {
+        return name == "";
     }
 
-    Client(string name, ll phone) {
-        this->name = name;
-        this->phone = phone;
+    void displayData()
+    {
+        cout << "\n" << name << "\t : " << num * 10 << "\n";
     }
 
-    void printDetails() {
-        cout.width(20);
-        cout << name << " ";
-        cout.width(20);
-        cout << phone << endl;
+    void setData(string nm, long no)
+    {
+        name = nm;
+        num = no;
     }
-
-    friend class HashTable;
 };
 
-class HashTable {
-    int tablesize;
-    Client *clients;
+int hash_func(string s)
+{
+    int tmp = 0;
+    for (char c : s)
+        tmp += c;
+    return tmp % TABLE_SIZE;
+}
 
-    int hashFunction(string clientname) {
-        int sum = 0;
-        for(int ch : clientname) {
-            sum += (int)ch;
-        }
-        return sum % tablesize;
+class HT
+{
+    UserData data[TABLE_SIZE];
+
+  public:
+    int insertWithoutReplacement(string nm, long ph)
+    {
+        int index = hash_func(nm);
+        int strt = index;
+
+        do
+            index = (index + 1) % TABLE_SIZE;
+        while (index != strt && EXISTS(index));
+
+        if (EXISTS(index))
+            return -1;
+
+        cout << "Inserting " << nm << " at " << index << "\n";
+        SET(index,nm,ph);
+
+        return index;
     }
 
-    bool isOriginal(int index) {
-        return hashFunction(clients[index].name) == index; 
+    int insertWithReplacement(string nm, long ph)
+    {
+        int index = hash_func(nm);
+        UserData dataAtIndex = data[index];
+
+        if (!dataAtIndex.exists())
+        {
+            SET(index,nm,ph);
+            return index;
+        }
+
+        int nextEmptyIndex = index;
+        do
+            nextEmptyIndex = (nextEmptyIndex + 1) % TABLE_SIZE;
+        while (nextEmptyIndex != index && data[nextEmptyIndex].exists());
+
+        if (data[nextEmptyIndex].exists())
+            return -1;
+
+        // check if the data at the index is in it's correct location
+        // i.e. if the hash value of previous data is equal to the index
+        // if so, insert the new data at the empty space
+        // otherwise swap out the previos data
+        cout << "\nInserting " << nm << " at ";
+        if (hash_func(dataAtIndex.getName()) == index)
+        {
+            data[nextEmptyIndex].setData(nm, ph);
+            cout << nextEmptyIndex << "\n";
+            return nextEmptyIndex;
+        }
+
+        data[nextEmptyIndex] = dataAtIndex;
+        SET(index,nm,ph);
+        cout << index << "\n";
+        cout << "\nSwapped data at index to " << nextEmptyIndex << "\n";
+
+        return index;
     }
+    void lookup(string name)
+    {
+        int index = hash_func(name);
+        int strt = index;
 
-    public:
-    
-    HashTable(int size) {
-        tablesize = size;
-        clients = new Client[tablesize];
+        do
+            index = (index + 1) % TABLE_SIZE;
+        while (index != strt && data[index].getName() != name);
+
+        cout << "\nAT\t :  " << index;
+        if (data[index].getName() == name)
+            data[index].displayData();
     }
-
-    //Initialize the whole clients array with default name and phone number (---- and 0)
-    void createTable() {
-        for(int i=0; i<tablesize; i++) {
-            clients[i] = Client();      //imp, not new Client()
-        }
-    }
-
-    void insertClientWORepl(Client newClient) {
-        int index = hashFunction(newClient.name);
-        
-        //if empty, insert directly
-        if(clients[index].isEmpty()) {
-            clients[index] = newClient;
-            return;
-        }
-        else {
-            int currIndex = index;
-            while(!clients[currIndex].isEmpty()) {
-                currIndex = (currIndex + 1) % tablesize;
-            }
-            //insert into empty location
-            clients[currIndex] = newClient;
-        }
-    }
-
-    void insertClientWRepl(Client newClient) {
-        int index = hashFunction(newClient.name);
-
-        if(clients[index].isEmpty()) {
-            clients[index] = newClient;
-        }
-        else {
-            //Not empty
-            int currIndex = index;
-
-            //Check if element actually belongs on that index
-            if(isOriginal(index)) {
-               currIndex = index;
-               while(!clients[currIndex].isEmpty()) {
-                    currIndex = (currIndex + 1) % tablesize;
-                } 
-                clients[currIndex] = newClient;
-            }
-            else {
-                //if not then store the existing client and put the newClient on its place. Linear probe for the next client.
-                Client existingClient = clients[index];
-                clients[index] = newClient;
-                while(!clients[currIndex].isEmpty()) {
-                    currIndex = (currIndex + 1) % tablesize;
-                }
-                clients[currIndex] = existingClient;
-            }
-        }
-
-    }
-
-    bool search(string clientname) {
-        int index = hashFunction(clientname);
-        //check if client exists on the index location
-        if(clients[index].name == clientname) {
-            cout << "Client exists";
-            return true;
-        }
-
-        //check for next locations (might be there because of probing)
-        int currIndex = index;
-        int pass = 0;
-
-        while(clients[currIndex].name != clientname && pass < tablesize) {
-            currIndex = (currIndex + 1) % tablesize;
-            pass++;
-        }
-        
-        if(pass == tablesize) {
-            cout << "Client not found" << endl;
-            return false;
-        }
-        else {
-            cout << "Client exists" << endl;
-            return true;
-        }
-    }
-
-    void displayHT() {
-        cout.width(10);
-        cout << "Client Name  ";
-        cout.width(10);
-        cout << "Telephone  " << endl;
-
-        for(int i=0; i< this->tablesize; i++) {
-            clients[i].printDetails();
-        }
-    }
-
-
-
 };
 
-int main() {
-    HashTable table(10);
-    table.createTable();
-    
-    table.insertClientWORepl(Client("abcd", 10002));
-    table.insertClientWORepl(Client("zdfg", 10003));
-    table.insertClientWORepl(Client("asdf", 10004));
-    table.insertClientWORepl(Client("dbca", 10005));
-    table.insertClientWORepl(Client("qwer", 10006));
-    table.insertClientWORepl(Client("rtyu", 10006));
-    table.insertClientWORepl(Client("ergh", 10006));
-    table.insertClientWORepl(Client("fghj", 10006));
-    table.insertClientWORepl(Client("zasd", 10006));
-    table.insertClientWORepl(Client("dfgh", 10006));
-    table.displayHT();
-
-    table.search("abcd");
-    table.search("zdfg");
-    table.search("asdf");
-    table.search("dbca");
-    table.search("qwer");
-    table.search("rtyu");
-    table.search("ergh");
-    table.search("fghj");
-    table.search("zasd");
-    table.search("dfgh");
-
-    HashTable table1(10);
-    table1.createTable();
-
-    table1.insertClientWRepl(Client("abcd", 10002));
-    table1.insertClientWRepl(Client("zdfg", 10003));
-    table1.insertClientWRepl(Client("asdf", 10004));
-    table1.insertClientWRepl(Client("dbca", 10005));
-    table1.insertClientWRepl(Client("qwer", 10006));
-    table1.insertClientWRepl(Client("rtyu", 10006));
-    table1.insertClientWRepl(Client("ergh", 10006));
-    table1.insertClientWRepl(Client("fghj", 10006));
-    table1.insertClientWRepl(Client("zasd", 10006));
-    table1.insertClientWRepl(Client("dfgh", 10006));
-    table1.displayHT();
-
-    table1.search("abcd");
-    table1.search("zdfg");
-    table1.search("asdf");
-    table1.search("dbca");
-    table1.search("qwer");
-    table1.search("rtyu");
-    table1.search("ergh");
-    table1.search("fghj");
-    table1.search("zasd");
-    table1.search("dfgh");
+int main()
+{
+    HT table;
+    table.insertWithoutReplacement("Soham", 9);
+    table.insertWithoutReplacement("Ab", 1);
+    table.insertWithoutReplacement("Ba", 2);
+    table.lookup("Soham");
+    table.lookup("Ab");
+    table.lookup("Ba");
+    table.insertWithReplacement("Ae", 3);
+    table.lookup("Ae");
+    table.lookup("Soham");
+    table.lookup("Ab");
+    table.lookup("Ba");
+    cout << "\n";
     return 0;
 }
+
+/*
+
+State after inserting first 3 :
+
+    4: Ab
+    5: Soham
+    6: Ba                   // actual position +2
+
+State after insert with replacement :
+
+    4: Ab
+    5: Soham
+    6: Ae
+    7: Ba                   // actual position +3
+
+*/
