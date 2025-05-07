@@ -71,14 +71,14 @@ class ThreadedBinarySearchTree
 
     Node *leftmost(Node *ptr)
     {
-        for (; ptr->hasLeftChild(); ptr = ptr->left)
+        for (ptr; ptr->hasLeftChild(); ptr = ptr->left)
             ; // nothing
         return ptr;
     }
 
     Node *rightmost(Node *ptr)
     {
-        for (; ptr->hasRightChild(); ptr = ptr->left)
+        for (ptr; ptr->hasRightChild(); ptr = ptr->right)
             ; // nothing
         return ptr;
     }
@@ -95,10 +95,7 @@ class ThreadedBinarySearchTree
         if (ptr->lthread)
             return ptr->left;
 
-        for (ptr = ptr->left; ptr->hasRightChild(); ptr = ptr->right)
-            ; // nothing
-
-        return ptr; // rightmost of ptr->left
+        return rightmost(ptr->left);
     }
 
     Node *getParentOf(Node *root, int val)
