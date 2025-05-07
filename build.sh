@@ -7,7 +7,7 @@ clear &&
 g++ $cpp_prefix$1.cpp -o $cpp_prefix$1.out
 
 #run executable
-./$cpp_prefix$1.out $2 < $txt_prefix$1
+./$cpp_prefix$1.out $2 < $txt_prefix$1.txt
 
 #clean the trash
 rm ./*.out
