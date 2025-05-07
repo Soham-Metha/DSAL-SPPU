@@ -105,6 +105,7 @@ class HT
 
     void lookup(string name)
     {
+        cout << "\n ---LOOKUP--- ";
         int index = hash_func(name);
         int strt = index;
 
