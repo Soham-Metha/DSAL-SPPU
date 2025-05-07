@@ -111,7 +111,7 @@ class HT
             index = (index + 1) % TABLE_SIZE;
         while (index != strt && NAME(index) != name);
 
-        cout << "\nAT\t :  " << index;
+        cout << "\nAT\t : " << index;
         if (NAME(index) == name)
             data[index].displayData();
     }
@@ -131,11 +131,13 @@ int main()
     table.lookup("Soham");
     table.lookup("Ab");
     table.lookup("Ba");
+    table.disp();
     table.insertWithReplacement("Ae", 3);
     table.lookup("Ae");
     table.lookup("Soham");
     table.lookup("Ab");
     table.lookup("Ba");
+    table.disp();
     cout << "\n";
     return 0;
 }
