@@ -55,6 +55,15 @@ class ThreadedBinarySearchTree
     ThreadedBinarySearchTree()
     {
         root = NULL;
+            int cnt;
+            cin >> cnt;
+            while (cnt > 0)
+            {
+                int tmp;
+                cin >> tmp;
+                insert(tmp);
+                cnt -= 1;
+            }
     }
 
     Node *leftmost(Node *ptr)
@@ -282,20 +291,6 @@ class ThreadedBinarySearchTree
 int main()
 {
     ThreadedBinarySearchTree tbst;
-    tbst.insert(10);
-    tbst.insert(5);
-    tbst.insert(15);
-    tbst.insert(13);
-    tbst.insert(17);
-    tbst.insert(3);
-    tbst.insert(7);
-    tbst.insert(11);
-    tbst.insert(6);
-    tbst.insert(16);
-    tbst.insert(14);
-    tbst.insert(18);
-    tbst.insert(2);
-    tbst.insert(9);
     tbst.printTree(tbst.root);
     cout << " \n";
     cout << " \n";
