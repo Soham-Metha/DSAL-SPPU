@@ -1,6 +1,4 @@
-#include <iomanip>
-#include <iostream>
-#include <stack>
+#include <bits/stdc++.h>
 #define REPEAT_STR(s, lb, ub)                                                                                          \
     {                                                                                                                  \
         for (lb; lb < ub; lb++)                                                                                        \
@@ -173,8 +171,7 @@ class ThreadedBinarySearchTree
 
     void printTree(Node *n, string prefix = "       ")
     {
-        if (!n)
-            return;
+        assert(n);
 
         cout << prefix;
 
