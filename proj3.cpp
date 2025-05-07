@@ -47,6 +47,16 @@ class Node
         this->rthread = false;
         this->right = new Node(val, this, this->right);
     }
+    void addLeftThread(Node *ptr)
+    {
+        this->lthread = true;
+        this->left = ptr;
+    }
+    void addRightThread(Node *ptr)
+    {
+        this->rthread = true;
+        this->right = ptr;
+    }
 };
 
 class ThreadedBinarySearchTree
@@ -93,9 +103,8 @@ class ThreadedBinarySearchTree
         Node *par = getParentOf(root, val);
 
         if (val <= (par->value))
-        {
             return par->addLeft(val);
-        }
+
         par->addRight(val);
     }
 
@@ -224,18 +233,14 @@ class ThreadedBinarySearchTree
         }
 
         if (ptr == par->left)
-        {
-            par->lthread = true;
-            par->left = ptr->left;
-            return;
-        }
-        par->rthread = true;
-        par->right = ptr->right;
+            par->addLeftThread(ptr->left);
+        else
+            par->addRightThread(ptr->right);
     }
 
     void caseB(Node *par, Node *ptr)
     {
-        Node *child = (ptr->hasLeftChild()) ? ptr->left : ptr->right;
+        Node *child = ptr->hasLeftChild() ? ptr->left : ptr->right;
 
         if (par == NULL)
             root = child;
@@ -249,7 +254,6 @@ class ThreadedBinarySearchTree
 
         if (ptr->hasLeftChild())
             p->right = s;
-
         else if (ptr->hasrightChild())
             s->left = p;
     }
@@ -257,11 +261,10 @@ class ThreadedBinarySearchTree
     {
         Node *parentOfLeftMost = ptr;
 
-        Node *leftMost = ptr->right;
-        while (leftMost->left != NULL)
+        Node *leftMost;
+        for (leftMost = ptr->right; leftMost->left != NULL; leftMost = leftMost->left)
         {
             parentOfLeftMost = leftMost;
-            leftMost = leftMost->left;
         }
 
         ptr->value = leftMost->value;
@@ -276,7 +279,6 @@ class ThreadedBinarySearchTree
 int main()
 {
     ThreadedBinarySearchTree tbst;
-    cout << "\033[40;37m\033[2J";
     tbst.insert(10);
     tbst.insert(5);
     tbst.insert(15);
@@ -298,7 +300,6 @@ int main()
     cout << endl;
     // tbst.delt(3);
     tbst.preorder();
-    cout << "\033[0m";
     cout << endl;
     return 0;
 }
