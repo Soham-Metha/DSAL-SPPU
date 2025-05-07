@@ -6,41 +6,33 @@
  */
 
 #include <iostream>
+
 #define TABLE_SIZE 10
-#define NAME(INDEX) data[INDEX].getName()
-#define EXISTS(INDEX) data[INDEX].exists()
+#define NAME(INDEX) data[INDEX].name
+#define EXISTS(INDEX) (data[INDEX].name != "")
 #define SET(INDEX,NM,PH) data[INDEX].setData(NM,PH)
+
 using namespace std;
 
 class UserData
 {
+    public:
     string name;
     long num;
 
-  public:
     UserData() : name(""), num(0.0) {};
 
     UserData(string nm, long no) : name(nm), num(no) {};
-
-    string getName()
-    {
-        return name;
-    }
-
-    bool exists()
-    {
-        return name != "";
-    }
-
-    void displayData()
-    {
-        cout << "\n" << name << "\t : " << num * 10 << "\n";
-    }
 
     void setData(string nm, long no)
     {
         name = nm;
         num = no;
+    }
+
+    void displayData()
+    {
+        cout << "\n" << name << "\t : " << num * 10 << "\n";
     }
 };
 
