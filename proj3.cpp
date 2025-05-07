@@ -86,16 +86,27 @@ class ThreadedBinarySearchTree
         return rightmost(ptr->left);
     }
 
-    Node *getParentOf(Node *root, int val)
+    void getParentOf(Node *root, int val, Node **parent, Node **child)
     {
         if (root == NULL)
-            return NULL;
+        {
+            *parent = *child = NULL;
+            return;
+        }
 
         // IF SOME CHILD/THREAD EXISTS AND IT IS EQUAL TO VAL
         if (root->left && *root->left == val)
-            return root;
+        {
+            *parent = root;
+            *child = root->left;
+            return;
+        }
         if (root->right && *root->right == val)
-            return root;
+        {
+            *parent = root;
+            *child = root->right;
+            return;
+        }
 
         // FOR BOTH POSSIBLITIES,
         // CHECK IF CHILD EXISTS,
@@ -103,13 +114,18 @@ class ThreadedBinarySearchTree
         // ELSE, node is not present in tree, but we
         // found position where it can be inserted(current root)
         if (val < root->value && root->hasLeftChild())
-            return getParentOf(root->left, val);
+            return getParentOf(root->left, val, parent, child);
         if (val < root->value)
-            return root;
+        {
+            *parent = root;
+            *child = NULL;
+        }
 
         if (root->hasRightChild())
-            return getParentOf(root->right, val);
-        return root;
+            return getParentOf(root->right, val, parent, child);
+
+        *parent = root;
+        *child = NULL;
     }
 
     void insert(int val)
@@ -120,8 +136,13 @@ class ThreadedBinarySearchTree
             return;
         }
 
-        Node *par = getParentOf(root, val);
+        Node *par, *tmp;
+        getParentOf(root, val, &par, &tmp);
 
+        if (tmp)
+        {
+            assert(0 && "THE VALUE IS ALREADY PRESENT");
+        }
         if (val <= (par->value))
             return par->addLeft(val);
 
@@ -184,17 +205,11 @@ class ThreadedBinarySearchTree
 
     void delt(int dkey)
     {
-        Node *par = getParentOf(root, dkey);
-        Node *ptr = NULL;
+        Node *par;
+        Node *ptr;
+        getParentOf(root, dkey, &par, &ptr);
 
-        if (!par)
-            return;
-
-        if (par->left && *par->left == dkey)
-            ptr = par->left;
-        else if (par->right && *par->right == dkey)
-            ptr = par->right;
-        else
+        if (!par || !ptr)
             return;
 
         if (ptr->hasLeftChild() && ptr->hasRightChild())
