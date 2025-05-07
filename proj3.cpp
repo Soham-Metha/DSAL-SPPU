@@ -243,7 +243,10 @@ class ThreadedBinarySearchTree
         Node *child = ptr->hasLeftChild() ? ptr->left : ptr->right;
 
         if (par == NULL)
+        {
             root = child;
+            return;
+        }
         else if (ptr == par->left)
             par->left = child;
         else
