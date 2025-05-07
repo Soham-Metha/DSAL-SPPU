@@ -179,37 +179,12 @@ class ThreadedBinarySearchTree
             Node *n = stk.top();
             stk.pop();
             output = output + to_string(n->value) + " ";
-            if (n->right && !n->rthread)
+            if (n->right && n->hasRightChild())
                 stk.push(n->right);
-            if (n->left && !n->lthread)
+            if (n->left && n->hasLeftChild())
                 stk.push(n->left);
         }
         cout << output;
-    }
-
-    void printTree(Node *n, string prefix = "       ")
-    {
-        assert(n);
-
-        cout << prefix;
-
-        if (n != root)
-        {
-            cout << "|-----> ";
-            prefix += "        ";
-        }
-
-        cout << n->value << endl;
-
-        if (n->lthread)
-            cout << prefix << "|-(T)-> " << (n ? to_string(n->value) : "NULL") << endl;
-        else
-            printTree(n->left, prefix);
-
-        if (n->rthread)
-            cout << prefix << "|-(T)-> " << (n ? to_string(n->value) : "NULL") << endl;
-        else
-            printTree(n->right, prefix);
     }
 
     void delt(int dkey)
@@ -285,6 +260,31 @@ class ThreadedBinarySearchTree
             caseA(parentOfLeftMost, leftMost);
         else
             caseB(parentOfLeftMost, leftMost);
+    }
+
+    void printTree(Node *n, string prefix = "       ")
+    {
+        assert(n);
+
+        cout << prefix;
+
+        if (n != root)
+        {
+            cout << "|-----> ";
+            prefix += "        ";
+        }
+
+        cout << n->value << endl;
+
+        if (n->lthread)
+            cout << prefix << "|-(T)-> " << (n ? to_string(n->value) : "NULL") << endl;
+        else
+            printTree(n->left, prefix);
+
+        if (n->rthread)
+            cout << prefix << "|-(T)-> " << (n ? to_string(n->value) : "NULL") << endl;
+        else
+            printTree(n->right, prefix);
     }
 };
 
