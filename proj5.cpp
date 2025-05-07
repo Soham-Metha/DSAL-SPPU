@@ -3,11 +3,6 @@
 #include <string.h>
 #define TABLE_SIZE 5
 
-#define HASH_FUNC(n, out)                                                                                              \
-    {                                                                                                                  \
-        out = n % TABLE_SIZE;                                                                                          \
-    }
-
 using namespace std;
 
 class Node
@@ -32,35 +27,30 @@ class HashTable
 
     void insert(int key, string val)
     {
-        int index;
-        HASH_FUNC(key, index);
+        int index = key % TABLE_SIZE;
         Node *node = new Node(key, val, table[index]);
         table[index] = node;
     }
 
     void search(int key)
     {
-        int index;
-        HASH_FUNC(key, index);
-        Node *tmp = table[index];
+        int index = key % TABLE_SIZE;
 
         cout << "\n----------------------------SEARCHING--------------------------\n";
-        while (tmp)
+        for (Node *tmp = table[index]; tmp != NULL; tmp = tmp->next)
         {
             if (tmp->key == key)
             {
                 cout << "\nFound " << tmp->key << " : " << tmp->value << "\n";
                 return;
             }
-            tmp = tmp->next;
         }
         cout << "\n\nKeyError : " << key << endl;
         exit(1);
     }
     void remove(int key)
     {
-        int index;
-        HASH_FUNC(key, index);
+        int index = key % TABLE_SIZE;
 
         Node *tmp = table[index];
 
