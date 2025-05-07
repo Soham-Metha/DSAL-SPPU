@@ -142,31 +142,30 @@ class ThreadedBinarySearchTree
         cout << output;
     }
 
-    void displayThread(Node *n, string prefix, bool isLast = true)
+    void displayThread(Node *n, string prefix)
     {
-        cout << prefix << "\033[37m" << (isLast ? "┗━━━━━━ " : "┣━━━━━━ ") << (n ? to_string(n->value) : "NULL")
-             << "\033[31m" << endl;
+        cout << prefix << "|-----> " << (n ? to_string(n->value) : "NULL") << endl;
     }
 
-    void printTree(Node *n, string prefix = "\t", int depth = 0, bool isLast = true)
+    void printTree(Node *n, string prefix = "        ", int depth = 0)
     {
         if (!n)
             return;
 
         cout << prefix;
+
         if (n != root)
         {
-            cout << (isLast ? "┗━━━━━━━┓ " : "┣━━━━━━━┓ ");
-            prefix += isLast ? "\t" : "┃\t";
-            prefix += "\033[37m";
+            cout << "|-----> ";
+            prefix += "        ";
         }
 
         cout << n->value << endl;
 
         if (n->lthread)
-            displayThread(n->left, prefix, false);
+            displayThread(n->left, prefix);
         else
-            printTree(n->left, prefix, depth + 1, n->rthread && n->lthread);
+            printTree(n->left, prefix, depth + 1);
 
         if (n->rthread)
             displayThread(n->right, prefix);
