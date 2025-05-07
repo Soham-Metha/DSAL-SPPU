@@ -71,41 +71,41 @@ class BT
         cout << "\nIterative Inorder Traversal : ";
 
         string output = "";
-		stack<Node *> stk;
-		Node *tmp = root;
-		while (!stk.empty() || tmp != NULL)
-		{
-			while (tmp != NULL)
-			{
-				stk.push(tmp);
-				tmp = tmp->left;
-			}
-			tmp = stk.top();
-			stk.pop();
-			output = output + to_string(tmp->data) + " ";
-			tmp = tmp->right;
-		}
-		cout << output;
+        stack<Node *> stk;
+        Node *tmp = root;
+        while (!stk.empty() || tmp != NULL)
+        {
+            while (tmp != NULL)
+            {
+                stk.push(tmp);
+                tmp = tmp->left;
+            }
+            tmp = stk.top();
+            stk.pop();
+            output = output + to_string(tmp->data) + " ";
+            tmp = tmp->right;
+        }
+        cout << output;
     }
 
     void ipreorder()
     {
         cout << "\nIterative Preorder Traversal : ";
         string output = "";
-		stack<Node *> stk;
-		stk.push(root);
+        stack<Node *> stk;
+        stk.push(root);
 
-		while (!stk.empty())
-		{
-			Node *n = stk.top();
-			stk.pop();
-			output = output + to_string(n->data) + " ";
-			if (n->right)
-				stk.push(n->right);
-			if (n->left)
-				stk.push(n->left);
-		}
-		cout << output;
+        while (!stk.empty())
+        {
+            Node *n = stk.top();
+            stk.pop();
+            output = output + to_string(n->data) + " ";
+            if (n->right)
+                stk.push(n->right);
+            if (n->left)
+                stk.push(n->left);
+        }
+        cout << output;
     }
 
     void ipostorder()
