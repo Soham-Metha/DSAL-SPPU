@@ -123,7 +123,7 @@ class HT
         for (int i = 0; i < TABLE_SIZE; i++)
         {
             DISPLAY(i);
-            cout <<"\t"<< i;
+            cout << "\t" << i;
         }
         cout << "\n ---TABLE--- ";
     }
@@ -148,20 +148,3 @@ int main()
     cout << "\n";
     return 0;
 }
-
-/*
-
-State after inserting first 3 :
-
-    4: Ab
-    5: Soham
-    6: Ba                   // actual position +2
-
-State after insert with replacement :
-
-    4: Ab
-    5: Soham
-    6: Ae
-    7: Ba                   // actual position +3
-
-*/
