@@ -29,7 +29,7 @@ class UserData
 
     bool exists()
     {
-        return name == "";
+        return name != "";
     }
 
     void displayData()
