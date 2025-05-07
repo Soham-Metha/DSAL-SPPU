@@ -97,10 +97,17 @@ class ThreadedBinarySearchTree
         if (root->right && *root->right == val)
             return root;
 
-        // CHECK BOTH 
-        if (val < root->value)
+        // FOR BOTH POSSIBLITIES,
+        // CHECK IF CHILD EXISTS, 
+        //IF yes, recursively check
+        // ELSE, node is not present in tree, but we 
+        // found position where it can be inserted(current root)
+        if (val < root->value && root->hasLeftChild())
             return getParentOf(root->left, val);
-        else
+        if (val < root->value)
+            return root;
+
+        if (root->hasRightChild())
             return getParentOf(root->right, val);
         return root;
     }
@@ -123,10 +130,7 @@ class ThreadedBinarySearchTree
 
     void inorder()
     {
-        if (root == NULL)
-        {
-            return;
-        }
+        assert(root);
 
         for (Node *ptr = leftmost(root); ptr != NULL; ptr = inorderSuccessor(ptr))
         {
@@ -155,7 +159,7 @@ class ThreadedBinarySearchTree
 
     void displayThread(Node *n, string prefix)
     {
-        cout << prefix << "|---> " << (n ? to_string(n->value) : "NULL") << endl;
+        cout << prefix << "|-(T)-> " << (n ? to_string(n->value) : "NULL") << endl;
     }
 
     void printTree(Node *n, string prefix = "       ")
