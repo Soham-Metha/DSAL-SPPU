@@ -68,7 +68,7 @@ class BT
 
     void iinorder()
     {
-        cout << "\nIterative Inorder Traversal:" << endl;
+        cout << "\nIterative Inorder Traversal : ";
 
         string output = "";
 		stack<Node *> stk;
@@ -90,7 +90,7 @@ class BT
 
     void ipreorder()
     {
-        cout << "\nIterative Preorder Traversal:" << endl;
+        cout << "\nIterative Preorder Traversal : ";
         string output = "";
 		stack<Node *> stk;
 		stk.push(root);
@@ -110,7 +110,7 @@ class BT
 
     void ipostorder()
     {
-        cout << "\nIterative Postorder Traversal:" << endl;
+        cout << "\nIterative Postorder Traversal : ";
         string output = "";
         stack<Node *> stk;
         stk.push(root);
@@ -216,7 +216,7 @@ int main()
     tree.ipreorder();
     tree.ipostorder();
     tree.iinorder();
-    cout << "Height: " << tree.printTreeAndFindHeight(tree.root);
+    cout << "\n\nHeight: " << tree.printTreeAndFindHeight(tree.root);
 
     BT tree2 = tree;
     cout << "Tree 2\n Inorder : ";
