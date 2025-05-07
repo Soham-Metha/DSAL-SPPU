@@ -1,14 +1,4 @@
 #include <bits/stdc++.h>
-#define REPEAT_STR(s, lb, ub)                                                                                          \
-    {                                                                                                                  \
-        for (lb; lb < ub; lb++)                                                                                        \
-            cout << s;                                                                                                 \
-    }
-#define REPEAT_ST(s, n)                                                                                                \
-    {                                                                                                                  \
-        for (int i = 0; i < n; i++)                                                                                    \
-            cout << s;                                                                                                 \
-    }
 
 using namespace std;
 
@@ -99,13 +89,15 @@ class ThreadedBinarySearchTree
     Node *getParentOf(Node *root, int val)
     {
         if (root == NULL)
-            return root;
+            return NULL;
 
+        // IF SOME CHILD/THREAD EXISTS AND IT IS EQUAL TO VAL
         if (root->left && *root->left == val)
             return root;
         if (root->right && *root->right == val)
             return root;
 
+        // FIRST CHECK
         if (val < root->value && root->hasLeftChild())
             return getParentOf(root->left, val);
         if (val < root->value)
