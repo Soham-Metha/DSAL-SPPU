@@ -60,15 +60,15 @@ class HashTable
         cout << "\n----------------------------DELETION---------------------------\n";
         if (tmp->key == key)
         {
-            table[index] = tmp->next;
             table[index]->display();
+            table[index] = tmp->next;
             return;
         }
         for (; tmp->next; tmp = tmp->next)
             if (tmp->next->key == key)
             {
-                tmp->next = tmp->next->next;
                 table[index]->display();
+                tmp->next = tmp->next->next;
                 return;
             }
 
