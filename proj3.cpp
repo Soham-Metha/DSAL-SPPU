@@ -29,11 +29,23 @@ class Node
     {
         return value == val;
     }
-    bool hasLeftChild(){
+    bool hasLeftChild()
+    {
         return !lthread;
     }
-    bool hasrightChild(){
+    bool hasrightChild()
+    {
         return !rthread;
+    }
+    void addLeft(int val)
+    {
+        this->lthread = false;
+        this->left = new Node(val, this->left, this);
+    }
+    void addRight(int val)
+    {
+        this->rthread = false;
+        this->right = new Node(val, this, this->right);
     }
 };
 
@@ -82,12 +94,9 @@ class ThreadedBinarySearchTree
 
         if (val <= (par->value))
         {
-            par->lthread = false;
-            par->left = new Node(val, par->left, par);
-            return;
+            return par->addLeft(val);
         }
-        par->rthread = false;
-        par->right = new Node(val, par, par->right);
+        par->addRight(val);
     }
 
     Node *inorderSuccessor(Node *ptr)
