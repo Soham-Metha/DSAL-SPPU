@@ -12,6 +12,9 @@ class Node
     string value;
     Node *next;
     Node(int k, string v, Node *n) : key(k), value(v), next(n) {};
+    void display(){
+        cout << " |━| " << key << " ━━━ " << value;
+    }
 };
 
 class HashTable
