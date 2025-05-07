@@ -10,17 +10,17 @@
 #define TABLE_SIZE 10
 #define NAME(INDEX) data[INDEX].name
 #define EXISTS(INDEX) (data[INDEX].name != "")
-#define SET(INDEX,NM,PH) data[INDEX].setData(NM,PH)
+#define SET(INDEX, NM, PH) data[INDEX].setData(NM, PH)
 
 using namespace std;
 
 class UserData
 {
-    public:
+  public:
     string name;
     long num;
 
-    UserData() : name(""), num(0.0) {};
+    UserData() : name(""), num(0) {};
 
     UserData(string nm, long no) : name(nm), num(no) {};
 
@@ -32,7 +32,7 @@ class UserData
 
     void displayData()
     {
-        cout << "\n" << name << "\t : " << num * 10 << "\n";
+        cout << "\n" << name << "\t : " << num << "\n";
     }
 };
 
@@ -62,7 +62,7 @@ class HT
             return -1;
 
         cout << "Inserting " << nm << " at " << index << "\n";
-        SET(index,nm,ph);
+        SET(index, nm, ph);
 
         return index;
     }
@@ -74,7 +74,7 @@ class HT
 
         if (!EXISTS(index))
         {
-            SET(index,nm,ph);
+            SET(index, nm, ph);
             return index;
         }
 
@@ -89,18 +89,19 @@ class HT
         cout << "\nInserting " << nm << " at ";
         if (hash_func(NAME(index)) == index)
         {
-            SET(nextEmptyIndex,nm,ph);
+            SET(nextEmptyIndex, nm, ph);
             cout << nextEmptyIndex << "\n";
             return nextEmptyIndex;
         }
 
         data[nextEmptyIndex] = dataAtIndex;
-        SET(index,nm,ph);
+        SET(index, nm, ph);
         cout << index << "\n";
         cout << "\nSwapped data at index to " << nextEmptyIndex << "\n";
 
         return index;
     }
+
     void lookup(string name)
     {
         int index = hash_func(name);
@@ -113,6 +114,11 @@ class HT
         cout << "\nAT\t :  " << index;
         if (NAME(index) == name)
             data[index].displayData();
+    }
+    void disp(){
+        for(UserData tmp : data){
+            tmp.displayData();
+        }
     }
 };
 
