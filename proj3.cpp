@@ -180,7 +180,7 @@ class ThreadedBinarySearchTree
 
         if (n != root)
         {
-            cout << "|-----> ";
+            cout << "|---> ";
             prefix += "        ";
         }
 
