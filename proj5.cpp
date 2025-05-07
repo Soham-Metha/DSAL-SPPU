@@ -12,7 +12,8 @@ class Node
     string value;
     Node *next;
     Node(int k, string v, Node *n) : key(k), value(v), next(n) {};
-    void display(){
+    void display()
+    {
         cout << " |━| " << key << " ━━━ " << value;
     }
 };
@@ -41,13 +42,12 @@ class HashTable
 
         cout << "\n----------------------------SEARCHING--------------------------\n";
         for (Node *tmp = table[index]; tmp != NULL; tmp = tmp->next)
-        {
             if (tmp->key == key)
             {
                 cout << "\nFound " << tmp->key << " : " << tmp->value << "\n";
                 return;
             }
-        }
+
         cout << "\n\nKeyError : " << key << endl;
         exit(1);
     }
@@ -64,17 +64,13 @@ class HashTable
             table[index]->display();
             return;
         }
-
-        while (tmp->next)
-        {
+        for (; tmp->next; tmp = tmp->next)
             if (tmp->next->key == key)
             {
                 tmp->next = tmp->next->next;
                 table[index]->display();
                 return;
             }
-            tmp = tmp->next;
-        }
 
         cout << "\n\nKeyError : " << key << endl;
         exit(1);
@@ -82,19 +78,17 @@ class HashTable
 
     void disp(int i = 0)
     {
-        if (i == TABLE_SIZE)
-            return;
-
-        cout << "\n[     " << i << "     ]";
-        Node *tmp = table[i];
-        while (tmp)
+        for (int i = 0; i < TABLE_SIZE; i++)
         {
-            cout << " |━| " << tmp->key << " ━━━ " << tmp->value;
-            tmp = tmp->next;
+            cout << "\n[     " << i << "     ]";
+            Node *tmp = table[i];
+            while (tmp)
+            {
+                cout << " |━| " << tmp->key << " ━━━ " << tmp->value;
+                tmp = tmp->next;
+            }
+            cout << endl;
         }
-        cout << endl;
-
-        disp(i + 1);
     }
 };
 
