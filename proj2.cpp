@@ -16,6 +16,7 @@ class Node {
         data = 0;
         left = right = NULL;
     }
+    
     friend class BST;
 };
 
