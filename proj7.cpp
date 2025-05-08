@@ -76,7 +76,7 @@ void findShortestPath(int vertexCount, int edgeCount, Edge arr[])
         {
             continue;
         }
-        unionFind[arr[i].end] = x;
+        unionFind[y] = x;
         cost += arr[i].cost;
 
         arr[i].disp();
