@@ -15,7 +15,6 @@ class Graph
         for (int i = 0; i < v; i++)
             values[i] = place[i];
     }
-    void addEdge(string v, string w);
     void set_default()
     {
         for (int i = 0; i < nodeCnt; i++)
@@ -23,28 +22,31 @@ class Graph
             visited[values[i]] = false;
         }
     }
+    void addEdge(string v, string w);
     void DFS(string v);
     void BFS(string v);
 };
 
-void Graph::addEdge(string v, string w)
+void Graph::addEdge(string a, string b)
 {
-    adjMatrix[v].push_back(w);
+    adjMatrix[a].push_back(b);
 }
 
-void Graph::DFS(string v)
+void Graph::DFS(string start)
 {
-    visited[v] = true;
-    cout << v << " ";
+    set_default();
+    visited[start] = true;
+    cout << start << " ";
 
     list<string>::iterator i;
-    for (i = adjMatrix[v].begin(); i != adjMatrix[v].end(); ++i)
+    for (i = adjMatrix[start].begin(); i != adjMatrix[start].end(); ++i)
         if (!visited[*i])
             DFS(*i);
 }
 
 void Graph::BFS(string s)
 {
+    set_default();
     visited[s] = false;
 
     list<string> queue;
@@ -113,10 +115,8 @@ int main()
         cout << "Enter place :: ";
         cin >> name;
         cout << "\nDFS :: ";
-        g.set_default();
         g.DFS(name);
         cout << "\nBFS :: ";
-        g.set_default();
         g.BFS(name);
         cout << "\nYou want to continue (y/n) :: ";
         cin >> loop;
