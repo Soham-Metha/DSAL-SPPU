@@ -1,2 +1,0 @@
-4 ABCDE 0 abc
-48 Soham 4 abc

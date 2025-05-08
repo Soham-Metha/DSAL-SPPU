@@ -92,8 +92,8 @@ class MyFile
 
         fclose(file);
         fclose(temp);
-        //remove(filename);
-        //rename("temp", filename);
+        remove(filename);
+        rename("temp.txt", filename);
     }
 };
 
