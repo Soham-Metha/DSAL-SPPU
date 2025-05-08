@@ -3,6 +3,7 @@
     "files.associations": {
         "iostream": "cpp",
         "charconv": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "iosfwd": "cpp"
     }
 }
