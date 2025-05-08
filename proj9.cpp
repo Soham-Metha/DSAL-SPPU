@@ -35,7 +35,7 @@ class AVL
         return getHeight(node->left) - getHeight(node->right);
     }
 
-    Node *LRotation(Node *node)
+    Node *L_Rotation(Node *node)
     {
         Node *newRoot = node->left;
         newRoot->right = node;
@@ -44,7 +44,7 @@ class AVL
         return newRoot;
     }
 
-    Node *RRotation(Node *node)
+    Node *R_Rotation(Node *node)
     {
         Node *newRoot = node->right;
         newRoot->left = node;
@@ -53,30 +53,33 @@ class AVL
         return newRoot;
     }
 
-    Node *RLRotation(Node *node)
+    Node *RL_Rotation(Node *node)
     {
-        node->right = LRotation(node->right);
-        return RRotation(node);
+        node->right = L_Rotation(node->right);
+        return R_Rotation(node);
     }
 
-    Node *LRRotation(Node *node)
+    Node *LR_Rotation(Node *node)
     {
-        node->left = RRotation(node->left);
-        return LRotation(node);
+        node->left = R_Rotation(node->left);
+        return L_Rotation(node);
     }
 
     Node *balance(Node *node)
     {
         if (getBalanceFactor(node) == 2)
+        {
             if (getBalanceFactor(node->left) < 0)
-                node = LRRotation(node);
-            else
-                node = LRotation(node);
-        else if (getBalanceFactor(node) == -2)
+                node->left = R_Rotation(node->left);
+            node = L_Rotation(node);
+            return node;
+        }
+
+        if (getBalanceFactor(node) == -2)
             if (getBalanceFactor(node->right) < 0)
-                node = RRotation(node);
+                node = R_Rotation(node);
             else
-                node = RLRotation(node);
+                node = RL_Rotation(node);
 
         return node;
     }
