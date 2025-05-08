@@ -39,8 +39,7 @@ void Graph::DFS(string start)
 
     list<string>::iterator i;
     for (i = adjList[start].begin(); i != adjList[start].end(); i++)
-        if (!visited[*i]){
-            cout << "start:";
+        if (visited[*i]){
             DFS(*i);
             cout << "back:";
         }
