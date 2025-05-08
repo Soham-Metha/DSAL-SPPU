@@ -86,21 +86,24 @@ class AVL
         }
 
         if (key < node->key)
-            node->left = insertNodeAndBalance(node->left, key, value);
-        else if (key > node->key)
-            node->right = insertNodeAndBalance(node->right, key, value);
-        else
         {
-            node->value = value;
-            return node;
+            node->left = insertNodeAndBalance(node->left, key, value);
+            return balance(node);
         }
-        return balance(node);
+        if (key > node->key)
+        {
+            node->right = insertNodeAndBalance(node->right, key, value);
+            return balance(node);
+        }
+        node->value = value;
+        return node;
     }
 
     Node *getMin(Node *root)
     {
-        while (root->left != NULL)
-            root = root->left;
+        Node *tmp;
+        for (tmp = root; root->left != NULL; root = root->left)
+            ;
         return root;
     }
 
