@@ -40,7 +40,6 @@ void Graph::DFS(string start)
     for (i = adjList[start].begin(); i != adjList[start].end(); ++i)
         if (!visited[*i]){
             DFS(*i);
-            cout << " " << visited[*i] << " ";
         }
 }
 
