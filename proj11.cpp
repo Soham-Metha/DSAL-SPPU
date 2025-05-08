@@ -63,42 +63,38 @@ class MyFile
 
     void displayRecords()
     {
-        fopen(filename, "r");
+        file = fopen(filename, "r");
         while (fscanf(file, "%d %s %d %s\n", &S.roll, S.name, &S.div, S.address) == 4)
         {
             S.display();
         }
         fclose(file);
     }
-    /*
-        void deleteRecord(int roll)
+    void deleteRecord(int roll)
+    {
+        fopen(filename, "r");
+        FILE *temp = fopen("temp", "w");
+        bool found = false;
+        while (fscanf(file, "%d %s %d %s\n", &S.roll, S.name, &S.div, S.address) == 4)
         {
-            file.open(filename, ios::in);
-            fstream temp;
-            temp.open("temp", ios::out);
-            bool found = false;
-            file.read(reinterpret_cast<char *>(&S), sizeof(S));
-            while (!file.eof())
+            if (roll == S.roll)
             {
-                if (roll == S.roll)
-                {
-                    cout << "Deleting: ";
-                    S.display();
-                    found = true;
-                }
-                else
-                    temp.write(reinterpret_cast<char *>(&S), sizeof(S));
-                file.read(reinterpret_cast<char *>(&S), sizeof(S));
+                cout << "Deleting: ";
+                S.display();
+                found = true;
             }
+            else
+                fprintf(file, "%d %s %d %s\n", S.roll, S.name, S.div, S.address);
+        }
 
-            if (!found)
-                cout << "No such data exists." << endl;
+        if (!found)
+            cout << "No such data exists." << endl;
 
-            file.close();
-            temp.close();
-            remove(filename);
-            rename("temp", filename);
-        }*/
+        fclose(file);
+        fclose(temp);
+        remove(filename);
+        rename("temp", filename);
+    }
 };
 
 int main()
