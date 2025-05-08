@@ -6,6 +6,9 @@
         b = tmp;                                                                                                       \
     }
 
+#define LEFT 2 * i + 1
+#define RIGHT 2 * i + 2
+
 using namespace std;
 
 class Node
@@ -26,6 +29,8 @@ class Node
         left = right = NULL;
     }
 
+    Node(int v, Node *l, Node *r) : val(v), left(l), right(r) {};
+
     friend class Heap;
 };
 
@@ -44,27 +49,14 @@ class Heap
     void insert(int keys[], int n)
     {
         numNodes = n;
-        Node *newNode = new Node(keys[0]);
-        root = newNode;
+        Node *tmp[n];
+        for (int i = n; i > 0; i--)
+            if (RIGHT > n)
+                tmp[i] = new Node(keys[i]);
+            else
+                tmp[i] = new Node(keys[i], tmp[LEFT], tmp[RIGHT]);
 
-        // bfs insert
-        queue<Node *> que;
-        int i = 0;
-        que.push(root);
-        while (i < n - 1)
-        {
-
-            Node *poppedNode = que.front();
-            que.pop();
-
-            Node *leftNode = new Node(keys[++i]);
-            poppedNode->left = leftNode;
-            que.push(poppedNode->left);
-
-            Node *rightNode = new Node(keys[++i]);
-            poppedNode->right = rightNode;
-            que.push(poppedNode->right);
-        }
+        root = new Node(keys[0]);
     }
 
     Node *getLastNode()
@@ -97,6 +89,7 @@ class Heap
             SWAP(node->left->val, node->val);
         if (node->right != NULL && node->right->val > node->val)
             SWAP(node->right->val, node->val);
+
         return node;
     }
 
@@ -126,15 +119,8 @@ class Heap
 
             Node *lastNode = getLastNode();
 
-            // swap root node's value with the last node's value
-            int temp = root->val;
-            root->val = lastNode->val;
-            lastNode->val = temp;
-
-            // Print the value
+            SWAP(root->val, lastNode->val);
             cout << lastNode->val << " ";
-
-            // delete the node
             deleteNode(root, lastNode->val);
         }
         cout << endl;
