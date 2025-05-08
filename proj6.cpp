@@ -7,7 +7,7 @@ class Graph
     int nodeCnt;
     string values[10];
     map<string, bool> visited;
-    map<string, list<string>> adjMatrix;
+    map<string, list<string>> adjList;
 
     Graph(int v, string place[10])
     {
@@ -18,9 +18,7 @@ class Graph
     void set_default()
     {
         for (int i = 0; i < nodeCnt; i++)
-        {
             visited[values[i]] = false;
-        }
     }
     void addEdge(string v, string w);
     void DFS(string v);
@@ -29,7 +27,7 @@ class Graph
 
 void Graph::addEdge(string a, string b)
 {
-    adjMatrix[a].push_back(b);
+    adjList[a].push_back(b);
 }
 
 void Graph::DFS(string start)
@@ -39,7 +37,7 @@ void Graph::DFS(string start)
     cout << start << " ";
 
     list<string>::iterator i;
-    for (i = adjMatrix[start].begin(); i != adjMatrix[start].end(); ++i)
+    for (i = adjList[start].begin(); i != adjList[start].end(); ++i)
         if (!visited[*i])
             DFS(*i);
 }
@@ -58,17 +56,15 @@ void Graph::BFS(string s)
     while (!queue.empty())
     {
         s = queue.front();
-        cout << s << " ";
         queue.pop_front();
+        cout << s << " ";
 
-        for (i = adjMatrix[s].begin(); i != adjMatrix[s].end(); ++i)
-        {
+        for (i = adjList[s].begin(); i != adjList[s].end(); ++i)
             if (!visited[*i])
             {
                 visited[*i] = true;
                 queue.push_back(*i);
             }
-        }
     }
 }
 
