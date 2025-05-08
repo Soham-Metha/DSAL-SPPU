@@ -103,20 +103,15 @@ class Graph
 
             bool found = false;
             for (Node *currNode = head; currNode != NULL; currNode = currNode->down)
-
                 if (currNode->name == poppedNode)
                 {
                     found = true;
-                    Node *currListNode = currNode->next;
-                    while (currListNode != NULL)
-                    {
+                    for (Node *currListNode = currNode->next; currListNode != NULL; currListNode = currListNode->next;)
                         if (find(visited.begin(), visited.end(), currListNode->name) == visited.end())
                         {
                             visited.push_back(currListNode->name);
                             Queue.push(currListNode->name);
                         }
-                        currListNode = currListNode->next;
-                    }
                     break;
                 }
 
