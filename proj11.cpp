@@ -116,7 +116,6 @@ int main()
         switch (Choice)
         {
         case 1:
-            File.S.getData();
             File.addRecord();
             break;
 
