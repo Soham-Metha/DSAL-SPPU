@@ -3,6 +3,12 @@
 #define START(INDEX) arr[INDEX].start
 #define END(INDEX) arr[INDEX].end
 #define COST(INDEX) arr[INDEX].cost
+#define FIND(I)                                                                                                        \
+    {                                                                                                                  \
+        while (unionFind[I] != I)                                                                                      \
+            I = unionFind[I];                                                                                          \
+    }
+
 using namespace std;
 
 int unionFind[MAX_VERTEX];
@@ -12,10 +18,6 @@ class Edge
   public:
     int start, end, cost;
     Edge(int s, int e, int c) : start(s), end(e), cost(c) {};
-    bool operator>(Edge other)
-    {
-        return cost > other.cost;
-    }
     bool operator<(const Edge &other) const
     {
         return cost < other.cost;
@@ -39,6 +41,7 @@ void display(int vertexCount, int edgeCount, Edge arr[])
         adjMatrix[START(i) - 1][END(i) - 1] = COST(i);
         adjMatrix[END(i) - 1][START(i) - 1] = COST(i);
     }
+
     for (size_t i = 0; i < vertexCount; i++)
     {
         for (size_t j = 0; j < vertexCount; j++)
@@ -55,12 +58,10 @@ void findShortestPath(int vertexCount, int edgeCount, Edge arr[])
     for (size_t i = 0; i < edgeCount; i++)
     {
         int x = START(i);
-        while (unionFind[x] != x)
-            x = unionFind[x];
+        FIND(x);
 
         int y = END(i);
-        while (unionFind[y] != y)
-            y = unionFind[y];
+        FIND(y);
 
         if (x == y)
             continue;
@@ -76,9 +77,7 @@ void findShortestPath(int vertexCount, int edgeCount, Edge arr[])
 int main()
 {
     for (size_t i = 0; i < MAX_VERTEX; i++)
-    {
         unionFind[i] = i;
-    }
 
     Edge graph[] = {Edge(1, 2, 21), Edge(1, 3, 12), Edge(1, 4, 37), Edge(2, 4, 10),
                     Edge(3, 4, 14), Edge(3, 5, 17), Edge(4, 5, 12)};
@@ -103,6 +102,13 @@ int main()
 }
 
 // DONT NEED THIS
+/*
+
+    bool operator>(Edge other)
+    {
+        return cost > other.cost;
+    }
+
 void InsertionSort(int edgeCount, Edge arr[])
 {
     for (int i = 1; i < edgeCount; ++i)
@@ -118,3 +124,5 @@ void InsertionSort(int edgeCount, Edge arr[])
         arr[j + 1] = key;
     }
 }
+
+*/
