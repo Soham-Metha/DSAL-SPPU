@@ -86,6 +86,7 @@ int main()
     int edgeCnt = 7;
     int vertexCnt = 5;
 
+    cout << "start\t| end\t| cost\n";
     for (size_t i = 0; i < edgeCnt; i++)
         graph[i].disp();
 
