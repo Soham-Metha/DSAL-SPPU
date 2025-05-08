@@ -7,7 +7,7 @@ int unionFind[MAX_VERTEX];
 
 class Edge
 {
-public:
+  public:
     int start;
     int end;
     int cost;
@@ -15,6 +15,10 @@ public:
     bool operator>(Edge other)
     {
         return cost > other.cost;
+    }
+    void disp()
+    {
+        cout << start << " \t| " << end << " \t| " << cost << "\n";
     }
 };
 
@@ -58,19 +62,24 @@ void display(int vertexCount, int edgeCount, Edge arr[])
 void findShortestPath(int vertexCount, int edgeCount, Edge arr[])
 {
     InsertionSort(edgeCount, arr);
-    bool visited[vertexCount];
     int cost = 0;
     for (size_t i = 0; i < edgeCount; i++)
     {
-        if (!visited[arr[i].end])
-        {
-            visited[arr[i].end] = true;
-            cost += arr[i].cost;
+        int x = arr[i].start;
+        while (unionFind[x] != x)
+            x = unionFind[x];
 
-            cout << arr[i].start << " \t| "
-                 << arr[i].end << " \t| "
-                 << arr[i].cost << "\n";
+        int y = arr[i].end;
+        while (unionFind[y] != y)
+            y = unionFind[y];
+        if (x == y)
+        {
+            continue;
         }
+        unionFind[arr[i].end] = x;
+        cost += arr[i].cost;
+
+        arr[i].disp();
     }
 }
 
@@ -78,17 +87,11 @@ int main()
 {
     for (size_t i = 0; i < MAX_VERTEX; i++)
     {
-        /* code */
+        unionFind[i] = i;
     }
-    
-    Edge graph[] = {
-        Edge(1, 2, 21),
-        Edge(1, 3, 12),
-        Edge(1, 4, 37),
-        Edge(2, 4, 10),
-        Edge(3, 4, 14),
-        Edge(3, 5, 17),
-        Edge(4, 5, 12)};
+
+    Edge graph[] = {Edge(1, 2, 21), Edge(1, 3, 12), Edge(1, 4, 37), Edge(2, 4, 10),
+                    Edge(3, 4, 14), Edge(3, 5, 17), Edge(4, 5, 12)};
 
     int egdeCnt = 7;
     int vertexCnt = 5;
