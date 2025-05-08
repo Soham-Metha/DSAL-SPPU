@@ -76,7 +76,7 @@ void findShortestPath(int vertexCount, int edgeCount, Edge arr[])
     {
         arr[i].disp();
     }
-    
+    cout << "\n\n";
     int cost = 0;
     for (size_t i = 0; i < edgeCount; i++)
     {
