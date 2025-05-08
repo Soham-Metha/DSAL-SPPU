@@ -1,4 +1,4 @@
-#include <iostream>
+#include <bits/stdc++.h>
 #define MAX_VERTEX 10
 #define START(INDEX) arr[INDEX].start
 #define END(INDEX) arr[INDEX].end
@@ -15,6 +15,10 @@ class Edge
     bool operator>(Edge other)
     {
         return cost > other.cost;
+    }
+    bool operator<(const Edge &other) const
+    {
+        return cost < other.cost;
     }
     void disp()
     {
@@ -61,7 +65,8 @@ void display(int vertexCount, int edgeCount, Edge arr[])
 
 void findShortestPath(int vertexCount, int edgeCount, Edge arr[])
 {
-    InsertionSort(edgeCount, arr);
+    //InsertionSort(edgeCount, arr);
+    sort(arr,arr+edgeCount);
     int cost = 0;
     for (size_t i = 0; i < edgeCount; i++)
     {
