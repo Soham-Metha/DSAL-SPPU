@@ -84,7 +84,7 @@ class MyFile
                 found = true;
             }
             else
-                fprintf(file, "%d %s %d %s\n", S.roll, S.name, S.div, S.address);
+                fprintf(temp, "%d %s %d %s\n", S.roll, S.name, S.div, S.address);
         }
 
         if (!found)
@@ -92,8 +92,8 @@ class MyFile
 
         fclose(file);
         fclose(temp);
-        //remove(filename);
-        //rename("temp.txt", filename);
+        remove(filename);
+        rename("temp.txt", filename);
     }
 };
 
