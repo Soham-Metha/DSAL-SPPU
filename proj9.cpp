@@ -53,24 +53,13 @@ class AVL
         return newRoot;
     }
 
-    Node *RL_Rotation(Node *node)
-    {
-        node->right = L_Rotation(node->right);
-        return R_Rotation(node);
-    }
-
-    Node *LR_Rotation(Node *node)
-    {
-        node->left = R_Rotation(node->left);
-        return L_Rotation(node);
-    }
-
     Node *balance(Node *node)
     {
         if (getBalanceFactor(node) == 2)
         {
             if (getBalanceFactor(node->left) < 0)
                 node->left = R_Rotation(node->left);
+
             node = L_Rotation(node);
             return node;
         }
@@ -79,6 +68,7 @@ class AVL
         {
             if (getBalanceFactor(node->right) > 0)
                 node->right = L_Rotation(node->right);
+
             node = R_Rotation(node);
         }
 
