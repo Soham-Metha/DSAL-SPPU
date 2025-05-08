@@ -28,6 +28,7 @@ class Graph
 void Graph::addEdge(string a, string b)
 {
     adjList[a].push_back(b);
+    adjList[b].push_back(a);
 }
 
 void Graph::DFS(string start)
@@ -71,24 +72,23 @@ void Graph::BFS(string s)
 int main()
 {
 
-    int n;
-    cout << "\nEnter the number of elements in the graph - ";
-    cin >> n;
-    int mat[n][n];
+    int nodeCnt;
+    cin >> nodeCnt;
+
     string name;
-    string name_list[n];
-    for (int i = 0; i < n; i++)
+    string name_list[nodeCnt];
+    for (int i = 0; i < nodeCnt; i++)
     {
         cout << "Enter the name of vertice " << i + 1 << " - ";
         cin >> name;
         name_list[i] = name;
     }
-    Graph g(n, name_list);
+    Graph g(nodeCnt, name_list);
     char connected;
     cout << "\nY-YES & N-NO\n";
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < nodeCnt; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < nodeCnt; j++)
         {
             cout << "\n" << name_list[i] << " connected " << name_list[j] << "--->";
             cin >> connected;
@@ -96,26 +96,17 @@ int main()
             {
                 g.addEdge(name_list[i], name_list[j]);
             }
-            else
-            {
-                continue;
-            }
         }
         cout << "\n--------------------------------\n";
     }
-    char loop = 'y';
-    while (loop == 'y' || loop == 'Y')
-    {
-        cout << "-------------------------------------\n";
-        cout << "Enter place :: ";
-        cin >> name;
-        cout << "\nDFS :: ";
-        g.DFS(name);
-        cout << "\nBFS :: ";
-        g.BFS(name);
-        cout << "\nYou want to continue (y/n) :: ";
-        cin >> loop;
-    }
+    
+    cout << "-------------------------------------\n";
+    cout << "Enter place :: ";
+    cin >> name;
+    cout << "\nDFS :: ";
+    g.DFS(name);
+    cout << "\nBFS :: ";
+    g.BFS(name);
 
     return 0;
 }
