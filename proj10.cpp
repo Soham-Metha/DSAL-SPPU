@@ -1,4 +1,11 @@
 #include <bits/stdc++.h>
+#define SWAP(a, b)                                                                                                     \
+    {                                                                                                                  \
+        int tmp = a;                                                                                                   \
+        a = b;                                                                                                         \
+        b = tmp;                                                                                                       \
+    }
+
 using namespace std;
 
 class Node
@@ -87,17 +94,9 @@ class Heap
         node->right = heapify(node->right);
 
         if (node->left != NULL && node->left->val > node->val)
-        {
-            int temp = node->left->val;
-            node->left->val = node->val;
-            node->val = temp;
-        }
+            SWAP(node->left->val, node->val);
         if (node->right != NULL && node->right->val > node->val)
-        {
-            int temp = node->right->val;
-            node->right->val = node->val;
-            node->val = temp;
-        }
+            SWAP(node->right->val, node->val);
         return node;
     }
 
