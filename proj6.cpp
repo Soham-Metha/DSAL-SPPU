@@ -76,7 +76,8 @@ class Graph
             {
                 cout << currListNode->name << " -> ";
             }
-            cout << " NULL " << endl;
+            cout << " NULL ";
+            cout << endl;
         }
     }
 
@@ -101,9 +102,10 @@ class Graph
                 break;
             }
 
+            Node *currNode = head;
             bool found = false;
-            for (Node *currNode = head; currNode != NULL; currNode = currNode->down)
-
+            while (currNode != NULL)
+            {
                 if (currNode->name == poppedNode)
                 {
                     found = true;
@@ -119,7 +121,8 @@ class Graph
                     }
                     break;
                 }
-
+                currNode = currNode->down;
+            }
             if (!found)
             {
                 cout << "Node is not present in the graph" << endl;
