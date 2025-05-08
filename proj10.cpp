@@ -50,7 +50,7 @@ class Heap
     {
         numNodes = n;
         Node *tmp[n];
-        for (int i = n; i > 0; i--)
+        for (int i = n-1; i >= 0; i--)
             if (RIGHT >= n)
                 tmp[i] = new Node(keys[i]);
             else
