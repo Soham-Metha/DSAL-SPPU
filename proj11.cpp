@@ -13,12 +13,11 @@ using namespace std;
 class Student
 {
     int roll, div;
-    string name, address;
+    char name[256], address[256];
 
     Student()
     {
         roll = div = 0;
-        name = address = "";
     }
 
     void display()
@@ -44,7 +43,7 @@ class Student
 class MyFile
 {
     char filename[20];
-    fstream file;
+    FILE* file;
     Student S;
 
   public:
@@ -55,24 +54,24 @@ class MyFile
 
     void addRecord()
     {
-        file.open(filename, ios::app);
+        file = fopen(filename,"a");
         S.getData();
-        file.write(reinterpret_cast<char *>(&S), sizeof(S));
-        file.close();
+        fprintf(file,"%d %s %d %s",S.roll,S.name,S.div,S.address);
+        fclose(file);
     }
 
     void displayRecords()
     {
-        file.open(filename, ios::in);
-        file.read(reinterpret_cast<char *>(&S), sizeof(S));
-        while (!file.eof())
+        fopen(filename, "r");
+        fscanf(file,"%d %s %d %s", &S.roll, &S.name, &S.div, &S.address);
+        while (file)
         {
             S.display();
-            file.read(reinterpret_cast<char *>(&S), sizeof(S));
+            fscanf(file,"%d %s %d %s", &S.roll, &S.name, &S.div, &S.address);
         }
-        file.close();
+        fclose(file);
     }
-
+/*
     void deleteRecord(int roll)
     {
         file.open(filename, ios::in);
@@ -100,7 +99,7 @@ class MyFile
         temp.close();
         remove(filename);
         rename("temp", filename);
-    }
+    }*/
 };
 
 int main()
