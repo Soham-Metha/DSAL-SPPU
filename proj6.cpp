@@ -87,19 +87,11 @@ class Graph
         string poppedNode;
         visited.push_back(startNode);
         Queue.push(startNode);
-        while (true)
+        while (!Queue.empty())
         {
-            if (!Queue.empty())
-            {
-                poppedNode = Queue.front();
-                Queue.pop();
-                cout << poppedNode << " ";
-            }
-            else
-            {
-                cout << endl;
-                break;
-            }
+            poppedNode = Queue.front();
+            Queue.pop();
+            cout << poppedNode << " ";
 
             Node *currNode = head;
             bool found = false;
