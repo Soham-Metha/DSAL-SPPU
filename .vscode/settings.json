@@ -2,6 +2,7 @@
     "gitdoc.enabled": true,
     "files.associations": {
         "iostream": "cpp",
-        "charconv": "cpp"
+        "charconv": "cpp",
+        "fstream": "cpp"
     }
 }
