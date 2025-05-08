@@ -50,14 +50,7 @@ class MyFile
   public:
     MyFile()
     {
-        cout << "Enter filename: ";
         cin >> filename;
-        file.open(filename, ios::out);
-        if (file)
-            cout << "File opened successfully." << endl;
-        else
-            cout << "File opening error." << endl;
-        file.close();
     }
 
     void addRecord()
