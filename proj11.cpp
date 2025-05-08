@@ -28,13 +28,9 @@ class Student
 
     void getData()
     {
-        // cout << "Enter name: ";
         cin >> name;
-        // cout << "Enter roll no: ";
         cin >> roll;
-        // cout << "Enter div: ";
         cin >> div;
-        // cout << "Enter address: ";
         cin >> address;
     }
 
@@ -55,8 +51,8 @@ class MyFile
 
     void addRecord()
     {
-        file = fopen(filename, "a");
         S.getData();
+        file = fopen(filename, "a");
         fprintf(file, "%d %s %d %s\n", S.roll, S.name, S.div, S.address);
         fclose(file);
     }
@@ -64,12 +60,11 @@ class MyFile
     void displayRecords()
     {
         file = fopen(filename, "r");
-        while (fscanf(file, "%d %s %d %s\n", &S.roll, S.name, &S.div, S.address) == 4)
-        {
+        while (fscanf(file, "%d %s %d %s\n", &S.roll, S.name, &S.div, S.address) == 4) // '4' because we read 4 items
             S.display();
-        }
         fclose(file);
     }
+
     void deleteRecord(int roll)
     {
         file = fopen(filename, "r");
@@ -127,3 +122,13 @@ int main()
     cout << endl;
     return 0;
 }
+/*
+A much easier way to do this is to simply work with cin & cout.
+we can redirect these using freopen
+Syntax : 
+    freopen("filename", "r", stdin); // similarly stdout
+If you are too lazy to do even that,
+use the '>' and'<' symbols when running the executable from cmdline
+refer the build.sh file
+
+*/
