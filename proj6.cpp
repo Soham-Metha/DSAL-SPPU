@@ -47,7 +47,6 @@ void Graph::DFS(string start)
 void Graph::BFS(string s)
 {
     set_default();
-    visited[s] = false;
 
     list<string> queue;
 
