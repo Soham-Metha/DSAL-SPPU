@@ -118,9 +118,9 @@ int main()
             break;
 
         case 3:
-            cout << "Enter the record you want to delete: ";
+            // cout << "Enter the record you want to delete: ";
             cin >> R;
-            // File.deleteRecord(R);
+            File.deleteRecord(R);
             break;
         }
     } while (Choice < 4);

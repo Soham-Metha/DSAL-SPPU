@@ -1,10 +1,9 @@
 test.txt
-1
-Soham
-48
-4
-abc
 
+1 Soham 48 4 abc
+
+2
+3 48
 2
 
 7
