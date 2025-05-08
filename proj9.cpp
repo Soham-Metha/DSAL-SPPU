@@ -4,13 +4,11 @@ using namespace std;
 class Node {
     int key;
     string value;
-    int height;
     Node *left, *right;
 
     public:
     Node() {
         left = right = NULL;
-        height = 1;
     }
     friend class AVL;
 };
@@ -32,18 +30,10 @@ class AVL {
         return getHeight(node -> left) - getHeight(node -> right);
     }
 
-    void updateHeight(Node *node) {
-        node -> height = getHeight(node);
-    }
-
     Node* LLRotation(Node *node) {
         Node *newRoot = node -> left;
         newRoot -> right = node;
         node -> left = NULL;
-
-        //very imp (might forget this)
-        updateHeight(node);
-        updateHeight(newRoot);
 
         return newRoot;
     }
@@ -52,10 +42,6 @@ class AVL {
         Node *newRoot = node -> right;
         newRoot -> left = node;
         node -> right = NULL;
-
-        //imp 
-        updateHeight(node);
-        updateHeight(newRoot);
 
         return newRoot;
     }
