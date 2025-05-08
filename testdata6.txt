@@ -1,7 +1,7 @@
 5
 a b c d e
 
-N Y N Y N
+Y Y Y Y Y
 Y N Y N N
 N Y Y N Y 
 Y N N N N 
