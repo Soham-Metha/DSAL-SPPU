@@ -89,7 +89,7 @@ int main()
     for (size_t i = 0; i < edgeCnt; i++)
         graph[i].disp();
 
-    cout << "\n\n MATRIX ";
+    cout << "\n\n MATRIX \n\n";
 
     display(vertexCnt, edgeCnt, graph);
 
