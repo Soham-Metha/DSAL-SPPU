@@ -190,7 +190,7 @@ class AVL
 
     void bfs()
     {
-        cout << "bfs: ";
+        cout << "\nbfs: \n";
         queue<Node *> que;
         que.push(root);
 
@@ -198,7 +198,7 @@ class AVL
         {
             Node *temp = que.front();
             que.pop();
-            cout << temp->key << " : " << temp->value << " ";
+            cout << temp->key << " : " << temp->value << " \n";
             if (temp->left)
                 que.push(temp->left);
             if (temp->right)
