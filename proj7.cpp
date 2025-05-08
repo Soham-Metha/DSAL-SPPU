@@ -81,6 +81,7 @@ void findShortestPath(int vertexCount, int edgeCount, Edge arr[])
 
         arr[i].disp();
     }
+    cout << "TOTAL COST : " << cost << endl;
 }
 
 int main()
