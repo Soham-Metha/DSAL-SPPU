@@ -76,10 +76,11 @@ class AVL
         }
 
         if (getBalanceFactor(node) == -2)
-            if (getBalanceFactor(node->right) < 0)
-                node = R_Rotation(node);
-            else
-                node = RL_Rotation(node);
+        {
+            if (getBalanceFactor(node->right) > 0)
+                node->right = L_Rotation(node->right);
+            node = R_Rotation(node);
+        }
 
         return node;
     }
