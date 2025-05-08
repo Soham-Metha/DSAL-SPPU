@@ -1,189 +1,126 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Node
-{
-    string name;
-    Node *next;
-    Node *down;
-
-  public:
-    Node(string str)
-    {
-        name = str;
-        next = down = NULL;
-    }
-
-    friend class Graph;
-};
-
 class Graph
 {
-    Node *head = NULL;
-
-    void addNode(string nodeA, string nodeB)
-    {
-        add(nodeA, nodeB);
-        add(nodeB, nodeA);
-    }
-
   public:
-    void add(string nodeA, string nodeB)
-    {
-        // If adjacency list is empty
-        if (head == NULL)
-        {
-            Node *node1 = new Node(nodeA);
-            Node *node2 = new Node(nodeB);
-            node1->next = node2;
-            head = node1;
-            return;
-        }
+    int nodeCnt;
+    string values[10];
+    map<string, bool> visited;
+    map<string, list<string>> adjMatrix;
 
-        Node *currNode;
-        Node *prev = NULL;
-        bool found = false;
-        for (currNode = head; currNode != NULL; currNode = currNode->down)
+    Graph(int v, string place[10])
+    {
+        nodeCnt = v;
+        for (int i = 0; i < v; i++)
+            values[i] = place[i];
+    }
+    void addEdge(string v, string w);
+    void set_default()
+    {
+        for (int i = 0; i < nodeCnt; i++)
         {
-            if (currNode->name != nodeA)
-            {
-                prev = currNode;
-                continue;
-            }
-            found = true;
-            Node *currListNode;
-            for (currListNode = currNode; currListNode->next != NULL; currListNode = currListNode->next)
-                ;
-            Node *node2 = new Node(nodeB);
-            currListNode->next = node2;
-            break;
-        }
-        // If nodeA is not found
-        if (!found)
-        {
-            Node *node1 = new Node(nodeA);
-            Node *node2 = new Node(nodeB);
-            prev->down = node1;
-            node1->next = node2;
+            visited[values[i]] = false;
         }
     }
-
-    void print()
-    {
-        for (Node *currArrayNode = head; currArrayNode != NULL; currArrayNode = currArrayNode->down)
-        {
-            for (Node *currListNode = currArrayNode; currListNode != NULL; currListNode = currListNode->next)
-            {
-                cout << currListNode->name << " -> ";
-            }
-            cout << " NULL " << endl;
-        }
-    }
-
-    void bfs(string startNode)
-    {
-        vector<string> visited;
-        queue<string> Queue;
-        string poppedNode;
-        visited.push_back(startNode);
-        Queue.push(startNode);
-        while (true)
-        {
-            if (!Queue.empty())
-            {
-                poppedNode = Queue.front();
-                Queue.pop();
-                cout << poppedNode << " ";
-            }
-            else
-            {
-                cout << endl;
-                break;
-            }
-
-            bool found = false;
-            for (Node *currNode = head; currNode != NULL; currNode = currNode->down)
-                if (currNode->name == poppedNode)
-                {
-                    found = true;
-                    for (Node *currListNode = currNode->next; currListNode != NULL; currListNode = currListNode->next;)
-                        if (find(visited.begin(), visited.end(), currListNode->name) == visited.end())
-                        {
-                            visited.push_back(currListNode->name);
-                            Queue.push(currListNode->name);
-                        }
-                    break;
-                }
-
-            if (!found)
-            {
-                cout << "Node is not present in the graph" << endl;
-                return;
-            }
-        }
-    }
-
-    void dfs(string start)
-    {
-        vector<string> visited;
-        stack<string> Stack;
-        string poppedNode;
-        visited.push_back(start);
-        Stack.push(start);
-        while (true)
-        {
-
-            if (!Stack.empty())
-            {
-                poppedNode = Stack.top();
-                Stack.pop();
-                cout << poppedNode << " ";
-            }
-            else
-            {
-                cout << endl;
-                break;
-            }
-
-            bool found = false;
-            Node *currNode = head;
-            while (currNode != NULL)
-            {
-                if (currNode->name == poppedNode)
-                {
-                    found = true;
-                    Node *currListNode = currNode->next;
-                    while (currListNode != NULL)
-                    {
-                        if (find(visited.begin(), visited.end(), currListNode->name) == visited.end())
-                        {
-                            visited.push_back(currListNode->name);
-                            Stack.push(currListNode->name);
-                        }
-                        currListNode = currListNode->next;
-                    }
-                    break;
-                }
-                currNode->down;
-            }
-            if (!found)
-            {
-                cout << "Node does not exist" << endl;
-                break;
-            }
-        }
-    }
+    void DFS(string v);
+    void BFS(string v);
 };
+
+void Graph::addEdge(string v, string w)
+{
+    adjMatrix[v].push_back(w);
+}
+
+void Graph::DFS(string v)
+{
+    visited[v] = true;
+    cout << v << " ";
+
+    list<string>::iterator i;
+    for (i = adjMatrix[v].begin(); i != adjMatrix[v].end(); ++i)
+        if (!visited[*i])
+            DFS(*i);
+}
+
+void Graph::BFS(string s)
+{
+    visited[s] = false;
+
+    list<string> queue;
+
+    visited[s] = true;
+    queue.push_back(s);
+
+    list<string>::iterator i;
+
+    while (!queue.empty())
+    {
+        s = queue.front();
+        cout << s << " ";
+        queue.pop_front();
+
+        for (i = adjMatrix[s].begin(); i != adjMatrix[s].end(); ++i)
+        {
+            if (!visited[*i])
+            {
+                visited[*i] = true;
+                queue.push_back(*i);
+            }
+        }
+    }
+}
 
 int main()
 {
-    Graph g;
-    g.add("A", "B");
-    g.add("A", "C");
-    g.add("B", "C");
-    g.add("C", "A");
-    g.print();
-    g.bfs("A");
-    g.dfs("A");
+
+    int n;
+    cout << "\nEnter the number of elements in the graph - ";
+    cin >> n;
+    int mat[n][n];
+    string name;
+    string name_list[n];
+    for (int i = 0; i < n; i++)
+    {
+        cout << "Enter the name of vertice " << i + 1 << " - ";
+        cin >> name;
+        name_list[i] = name;
+    }
+    Graph g(n, name_list);
+    char connected;
+    cout << "\nY-YES & N-NO\n";
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            cout << "\n" << name_list[i] << " connected " << name_list[j] << "--->";
+            cin >> connected;
+            if (connected == 'y' || connected == 'Y')
+            {
+                g.addEdge(name_list[i], name_list[j]);
+            }
+            else
+            {
+                continue;
+            }
+        }
+        cout << "\n--------------------------------\n";
+    }
+    char loop = 'y';
+    while (loop == 'y' || loop == 'Y')
+    {
+        cout << "-------------------------------------\n";
+        cout << "Enter place :: ";
+        cin >> name;
+        cout << "\nDFS :: ";
+        g.set_default();
+        g.DFS(name);
+        cout << "\nBFS :: ";
+        g.set_default();
+        g.BFS(name);
+        cout << "\nYou want to continue (y/n) :: ";
+        cin >> loop;
+    }
+
     return 0;
 }
