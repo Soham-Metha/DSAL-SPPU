@@ -64,11 +64,10 @@ class MyFile
     void displayRecords()
     {
         fopen(filename, "r");
-        fscanf(file,"%d %s %d %s", &S.roll, &S.name, &S.div, &S.address);
-        while (file)
+        ;
+        while (fscanf(file,"%d %s %d %s", &S.roll, &S.name, &S.div, &S.address) == 1)
         {
             S.display();
-            fscanf(file,"%d %s %d %s", &S.roll, &S.name, &S.div, &S.address);
         }
         fclose(file);
     }
