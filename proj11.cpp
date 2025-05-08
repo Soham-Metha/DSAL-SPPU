@@ -12,6 +12,7 @@ using namespace std;
 
 class Student
 {
+    public:
     int roll, div;
     char name[256], address[256];
 
@@ -42,11 +43,11 @@ class Student
 
 class MyFile
 {
+    public:
     char filename[20];
     FILE* file;
     Student S;
 
-  public:
     MyFile()
     {
         cin >> filename;
@@ -115,6 +116,7 @@ int main()
         switch (Choice)
         {
         case 1:
+            File.S.getData();
             File.addRecord();
             break;
 
@@ -125,7 +127,7 @@ int main()
         case 3:
             cout << "Enter the record you want to delete: ";
             cin >> R;
-            File.deleteRecord(R);
+            //File.deleteRecord(R);
             break;
         }
     } while (Choice < 4);
