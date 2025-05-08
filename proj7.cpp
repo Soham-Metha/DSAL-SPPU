@@ -2,7 +2,7 @@
 #define MAX_VERTEX 10
 #define START(INDEX) arr[INDEX].start
 #define END(INDEX) arr[INDEX].end
-#define cost(INDEX) arr[INDEX].cost
+#define COST(INDEX) arr[INDEX].cost
 using namespace std;
 
 int unionFind[MAX_VERTEX];
@@ -48,8 +48,8 @@ void display(int vertexCount, int edgeCount, Edge arr[])
 
     for (size_t i = 0; i < edgeCount; i++)
     {
-        adjMatrix[arr[i].start - 1][arr[i].end - 1] = arr[i].cost;
-        adjMatrix[arr[i].end - 1][arr[i].start - 1] = arr[i].cost;
+        adjMatrix[START(i) - 1][END(i) - 1] = COST(i);
+        adjMatrix[END(i) - 1][START(i) - 1] = COST(i);
     }
     for (size_t i = 0; i < vertexCount; i++)
     {
@@ -65,19 +65,19 @@ void findShortestPath(int vertexCount, int edgeCount, Edge arr[])
     int cost = 0;
     for (size_t i = 0; i < edgeCount; i++)
     {
-        int x = arr[i].start;
+        int x = START(i);
         while (unionFind[x] != x)
             x = unionFind[x];
 
-        int y = arr[i].end;
+        int y = END(i);
         while (unionFind[y] != y)
             y = unionFind[y];
+
         if (x == y)
-        {
             continue;
-        }
+
         unionFind[y] = x;
-        cost += arr[i].cost;
+        cost += COST(i);
 
         arr[i].disp();
     }
@@ -97,11 +97,11 @@ int main()
     int egdeCnt = 7;
     int vertexCnt = 5;
 
-    display(5, 7, graph);
+    display(vertexCnt, egdeCnt, graph);
 
     cout << "Edges chosen : \n"
          << "start\t| end\t| cost\n";
-    findShortestPath(5, 7, graph);
+    findShortestPath(vertexCnt, egdeCnt, graph);
     cout << endl;
 
     return 0;
