@@ -56,7 +56,7 @@ class Heap
             else
                 tmp[i] = new Node(keys[i], tmp[LEFT], tmp[RIGHT]);
 
-        root = new Node(keys[0]);
+        root = tmp[0];
     }
 
     Node *getLastNode()
