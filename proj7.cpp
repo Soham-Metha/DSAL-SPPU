@@ -66,7 +66,17 @@ void display(int vertexCount, int edgeCount, Edge arr[])
 void findShortestPath(int vertexCount, int edgeCount, Edge arr[])
 {
     //InsertionSort(edgeCount, arr);
+    for (size_t i = 0; i < edgeCount; i++)
+    {
+        arr[i].disp();
+    }
+    cout << "\n\n";
     sort(arr,arr+edgeCount);
+    for (size_t i = 0; i < edgeCount; i++)
+    {
+        arr[i].disp();
+    }
+    
     int cost = 0;
     for (size_t i = 0; i < edgeCount; i++)
     {
