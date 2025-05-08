@@ -12,7 +12,7 @@ using namespace std;
 
 class Student
 {
-    public:
+  public:
     int roll, div;
     char name[256], address[256];
 
@@ -28,13 +28,13 @@ class Student
 
     void getData()
     {
-        cout << "Enter name: ";
+        // cout << "Enter name: ";
         cin >> name;
-        cout << "Enter roll no: ";
+        // cout << "Enter roll no: ";
         cin >> roll;
-        cout << "Enter div: ";
+        // cout << "Enter div: ";
         cin >> div;
-        cout << "Enter address: ";
+        // cout << "Enter address: ";
         cin >> address;
     }
 
@@ -43,9 +43,9 @@ class Student
 
 class MyFile
 {
-    public:
+  public:
     char filename[20];
-    FILE* file;
+    FILE *file;
     Student S;
 
     MyFile()
@@ -55,50 +55,50 @@ class MyFile
 
     void addRecord()
     {
-        file = fopen(filename,"a");
+        file = fopen(filename, "a");
         S.getData();
-        fprintf(file,"%d %s %d %s\n",S.roll,S.name,S.div,S.address);
+        fprintf(file, "%d %s %d %s\n", S.roll, S.name, S.div, S.address);
         fclose(file);
     }
 
     void displayRecords()
     {
         fopen(filename, "r");
-        while (fscanf(file,"%d %s %d %s\n", &S.roll, S.name, &S.div, S.address) == 4)
+        while (fscanf(file, "%d %s %d %s\n", &S.roll, S.name, &S.div, S.address) == 4)
         {
             S.display();
         }
         fclose(file);
     }
-/*
-    void deleteRecord(int roll)
-    {
-        file.open(filename, ios::in);
-        fstream temp;
-        temp.open("temp", ios::out);
-        bool found = false;
-        file.read(reinterpret_cast<char *>(&S), sizeof(S));
-        while (!file.eof())
+    /*
+        void deleteRecord(int roll)
         {
-            if (roll == S.roll)
-            {
-                cout << "Deleting: ";
-                S.display();
-                found = true;
-            }
-            else
-                temp.write(reinterpret_cast<char *>(&S), sizeof(S));
+            file.open(filename, ios::in);
+            fstream temp;
+            temp.open("temp", ios::out);
+            bool found = false;
             file.read(reinterpret_cast<char *>(&S), sizeof(S));
-        }
+            while (!file.eof())
+            {
+                if (roll == S.roll)
+                {
+                    cout << "Deleting: ";
+                    S.display();
+                    found = true;
+                }
+                else
+                    temp.write(reinterpret_cast<char *>(&S), sizeof(S));
+                file.read(reinterpret_cast<char *>(&S), sizeof(S));
+            }
 
-        if (!found)
-            cout << "No such data exists." << endl;
+            if (!found)
+                cout << "No such data exists." << endl;
 
-        file.close();
-        temp.close();
-        remove(filename);
-        rename("temp", filename);
-    }*/
+            file.close();
+            temp.close();
+            remove(filename);
+            rename("temp", filename);
+        }*/
 };
 
 int main()
@@ -108,7 +108,7 @@ int main()
     int R;
     do
     {
-        //cout << "\n1: Add a record\n2: Display Database\n3: Delete a record\nEnter your choice: ";
+        // cout << "\n1: Add a record\n2: Display Database\n3: Delete a record\nEnter your choice: ";
         cin >> Choice;
 
         switch (Choice)
@@ -124,7 +124,7 @@ int main()
         case 3:
             cout << "Enter the record you want to delete: ";
             cin >> R;
-            //File.deleteRecord(R);
+            // File.deleteRecord(R);
             break;
         }
     } while (Choice < 4);
