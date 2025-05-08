@@ -108,7 +108,7 @@ int main()
     int R;
     do
     {
-        cout << "\n1: Add a record\n2: Display Database\n3: Delete a record\nEnter your choice: ";
+        //cout << "\n1: Add a record\n2: Display Database\n3: Delete a record\nEnter your choice: ";
         cin >> Choice;
 
         switch (Choice)
