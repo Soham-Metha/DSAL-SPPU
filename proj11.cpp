@@ -67,6 +67,7 @@ class MyFile
         while (fscanf(file,"%d %s %d %s\n", &S.roll, S.name, &S.div, S.address) == 1)
         {
             S.display();
+            exit(1);
         }
         fclose(file);
     }
