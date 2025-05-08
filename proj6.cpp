@@ -77,36 +77,32 @@ int main()
     string name_list[nodeCnt];
     for (int i = 0; i < nodeCnt; i++)
     {
-        cout << "Enter the name of vertice " << i + 1 << " - ";
         cin >> name;
         name_list[i] = name;
     }
     Graph g(nodeCnt, name_list);
     char connected;
-    cout << "\nY-YES & N-NO\n";
     for (int i = 0; i < nodeCnt; i++)
     {
         for (int j = 0; j < nodeCnt; j++)
         {
-            cout << "\n" << name_list[i] << " connected " << name_list[j] << "--->";
             cin >> connected;
             if (connected == 'y' || connected == 'Y')
             {
                 g.addEdge(name_list[i], name_list[j]);
             }
         }
-        cout << "\n--------------------------------\n";
     }
+    cin >> name;
     
     cout << "-------------------------------------\n";
-    cout << "Enter place :: ";
-    cin >> name;
     cout << "\nDFS :: ";
     g.set_default();
     g.DFS(name);
     cout << "\nBFS :: ";
     g.set_default();
     g.BFS(name);
+    cout << "\n-------------------------------------\n";
 
     return 0;
 }
