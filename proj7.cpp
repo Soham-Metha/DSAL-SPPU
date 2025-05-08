@@ -1,6 +1,8 @@
 #include <iostream>
 #define MAX_VERTEX 10
-
+#define START(INDEX) arr[INDEX].start
+#define END(INDEX) arr[INDEX].end
+#define cost(INDEX) arr[INDEX].cost
 using namespace std;
 
 int unionFind[MAX_VERTEX];
@@ -8,9 +10,7 @@ int unionFind[MAX_VERTEX];
 class Edge
 {
   public:
-    int start;
-    int end;
-    int cost;
+    int start,end,cost;
     Edge(int s, int e, int c) : start(s), end(e), cost(c) {};
     bool operator>(Edge other)
     {
