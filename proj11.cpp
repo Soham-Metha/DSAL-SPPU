@@ -64,7 +64,7 @@ class MyFile
     void displayRecords()
     {
         fopen(filename, "r");
-        while (fscanf(file,"%d %s %d %s", &S.roll, &S.name, &S.div, &S.address) == 1)
+        while (fscanf(file,"%d %s %d %s", &S.roll, S.name, &S.div, S.address) == 1)
         {
             S.display();
         }
