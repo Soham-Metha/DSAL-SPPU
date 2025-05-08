@@ -1,0 +1,10 @@
+5
+A B C D E
+
+N Y N Y N
+N N Y N N
+Y N Y N Y 
+N Y Y N N 
+Y Y N N N
+
+A

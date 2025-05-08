@@ -1,134 +1,108 @@
-#include <iostream>
-
-void setInp()
-{
-#ifndef INPUT
-    freopen("p6_i.txt", "r", stdin);
-#endif
-}
+#include <bits/stdc++.h>
 using namespace std;
 
-int count = 0;
-
-int getCount()
+class Graph
 {
-    return count++;
+  public:
+    int nodeCnt;
+    string values[10];
+    map<string, bool> visited;
+    map<string, list<string>> adjList;
+
+    Graph(int v, string place[10])
+    {
+        nodeCnt = v;
+        for (int i = 0; i < v; i++)
+            values[i] = place[i];
+    }
+    void set_default()
+    {
+        for (int i = 0; i < nodeCnt; i++)
+            visited[values[i]] = false;
+    }
+    void addEdge(string v, string w);
+    void DFS(string v);
+    void BFS(string v);
+};
+
+void Graph::addEdge(string a, string b)
+{
+    adjList[a].push_back(b);
+    adjList[b].push_back(a);
 }
 
-class Node
+void Graph::DFS(string start)
 {
-public:
-    string name;
-    int id;
-    Node *next;
-    Node *down;
-    Node(string nm, Node *n, Node *d) : name(nm), next(n), down(d), id(getCount()) {};
-};
+    visited[start] = true;
+    cout << start << " ";
 
-class AdjList
+    list<string>::iterator i;
+    for (i = adjList[start].begin(); i != adjList[start].end(); ++i)
+        if (!visited[*i]){
+            DFS(*i);
+        }
+}
+
+void Graph::BFS(string s)
 {
-public:
-    Node *head, *tail;
-    AdjList()
+    list<string> queue;
+
+    visited[s] = true;
+    queue.push_back(s);
+
+    list<string>::iterator i;
+
+    while (!queue.empty())
     {
-        head = NULL;
-        tail = NULL;
-    }
-    Node *insertDownNode(string nm)
-    {
-        if (tail)
-        {
-            tail->down = new Node(nm, NULL, NULL);
-            tail = tail->down;
-        }
-        else
-        {
-            head = new Node(nm, NULL, NULL);
-            tail = head;
-        }
-        cout << "\nInserted " << tail->name;
-        return tail;
-    }
-    Node *searchNode(string nm)
-    {
-        Node *tmp = head;
-        if (head == NULL)
-        {
-            return insertDownNode(nm);
-        }
-        while (tmp->name != nm && tmp->next != NULL)
-        {
-            tmp = tmp->next;
-        }
-        if (tmp->next == NULL && tmp->name!=nm)
-        {
-            return insertDownNode(nm);
-        }
-        return tmp;
-    }
-    void AppendNextNode(Node *n, Node *o)
-    {
-        Node *tmp = n;
-        while (tmp->next != NULL)
-        {
-            if (tmp == o)
+        s = queue.front();
+        queue.pop_front();
+        cout << s << " ";
+
+        for (i = adjList[s].begin(); i != adjList[s].end(); ++i)
+            if (!visited[*i])
             {
-                return;
+                visited[*i] = true;
+                queue.push_back(*i);
             }
-            tmp = tmp->next;
-        }
-        cout << "\nAppended " << o->name << " to " << tmp->name << "\n";
-        tmp->next = o;
     }
-    void addNodeToGraph()
-    {
-        string name;
-        int cnt = 0;
-        cout << "\nEnter name of city : ";
-        cin >> name;
-        cout << name;
-        Node *n = searchNode(name);
-        cout << "\nHow many adjecent nodes?";
-        cin >> cnt;
-        cout << cnt;
-        for (size_t i = 0; i < cnt; i++)
-        {
-            string adj;
-            cout << "\nEnter adjecent node : ";
-            cin >> adj;
-            cout << adj;
-            Node *nn = searchNode(adj);
-            AppendNextNode(n, nn);
-            AppendNextNode(nn, n);
-        }
-    }
-    void disp()
-    {
-        Node *tmpd = head;
-        while (tmpd->next != NULL)
-        {
-            Node *tmpn = tmpd;
-            while (tmpn->next != NULL)
-            {
-                cout << "-->" << tmpn->name;
-                tmpn = tmpn->next;
-            }
-            tmpd = tmpd->down;
-            cout << endl;
-        }
-    }
-};
+}
+
 int main()
 {
-    setInp();
-    AdjList list;
-    list.addNodeToGraph();
-    list.disp();
-    list.addNodeToGraph();
-    list.disp();
-    list.addNodeToGraph();
-    // list.disp();
-    list.addNodeToGraph();
-    // list.disp();
+
+    int nodeCnt;
+    cin >> nodeCnt;
+
+    string name;
+    string name_list[nodeCnt];
+    for (int i = 0; i < nodeCnt; i++)
+    {
+        cin >> name;
+        name_list[i] = name;
+    }
+    Graph g(nodeCnt, name_list);
+    char connected;
+    for (int i = 0; i < nodeCnt; i++)
+    {
+        for (int j = 0; j < nodeCnt; j++)
+        {
+            cin >> connected;
+            if (connected == 'y' || connected == 'Y')
+            {
+                g.addEdge(name_list[i], name_list[j]);
+            }
+        }
+    }
+    cin >> name;
+    
+    cout << "-------------------------------------";
+    cout << "\nDFS :: ";
+    g.set_default();
+    g.DFS(name);
+    cout << "\nBFS :: ";
+    g.set_default();
+    g.BFS(name);
+    cout << "\n-------------------------------------\n";
+
     return 0;
 }

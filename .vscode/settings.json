@@ -1,3 +1,9 @@
 {
-    "gitdoc.enabled": true
+    "gitdoc.enabled": true,
+    "files.associations": {
+        "iostream": "cpp",
+        "charconv": "cpp",
+        "fstream": "cpp",
+        "iosfwd": "cpp"
+    }
 }

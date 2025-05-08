@@ -1,222 +1,198 @@
-#include <iostream>
-#include <stack>
+#include <bits/stdc++.h>
 using namespace std;
 
 class Node
 {
-public:
-	int val;
-	Node *left;
-	Node *right;
-	Node(int v) : val(v), left(NULL), right(NULL) {};
-	Node(int v, Node *l, Node *r) : val(v), left(l), right(r) {};
+    int data;
+    Node *left;
+    Node *right;
+
+  public:
+    Node(int d)
+    {
+        data = d;
+        left = right = NULL;
+    }
+
+    friend class BST;
 };
 
-class BinarySearchTree
+class BST
 {
-public:
-	Node *root;
+  public:
+    Node *root = NULL;
+    BST()
+    {
+        int cnt;
+        cin >> cnt;
+        while (cnt > 0)
+        {
+            int tmp;
+            cin >> tmp;
+            insert(&root, tmp);
+            cnt -= 1;
+        }
+    }
+    void insert(Node **n, int v)
+    {
+        // think of (*n) as the nodePtr(left/right, whichever is passed)
 
-	BinarySearchTree(int arr[], int len)
-	{
-		if (arr == NULL)
-			return;
+        if ((*n) == NULL)
+        {
+            *n = new Node(v);
+            return;
+        }
 
-		root = NULL;
+        if (v <= (*n)->data)
+            return insert(&((*n)->left), v);
 
-		for (int i = 0; i < len; i++)
-			insertNode(&root, arr[i]);
-	}
+        return insert(&((*n)->right), v);
+    }
 
-	void insertNode(Node **n, int v)
-	{
-		if ((*n) == NULL)
-		{
-			*n = new Node(v);
-			return;
-		}
+    int search(Node *n, int target, int v = 0)
+    {
+        if (!n)
+            return 0;
 
-		if (v <= (*n)->val)
-			return insertNode(&((*n)->left), v);
+        if (n->data == target)
+            return v + 1;
 
-		return insertNode(&((*n)->right), v);
-	}
+        if (target < n->data)
+            return search(n->left, target, v + 1);
 
-	int printTree(Node *n, int v = 0)
-	{
-		if (n == NULL)
-			return v;
+        return search(n->right, target, v + 1);
+    }
 
-		int i;
-		for (i = 1; i < v; i++)
-			cout << "        ";
+    void iinorder()
+    {
+        cout << "\nIterative Inorder Traversal : ";
 
-		for (int j = 0; j < (v - i + 1); j++)
-			cout << "|-----> ";
+        string output = "";
+        stack<Node *> stk;
+        Node *tmp = root;
+        while (!stk.empty() || tmp != NULL)
+        {
+            while (tmp != NULL)
+            {
+                stk.push(tmp);
+                tmp = tmp->left;
+            }
+            tmp = stk.top();
+            stk.pop();
+            output = output + to_string(tmp->data) + " ";
+            tmp = tmp->right;
+        }
+        cout << output;
+    }
 
-		cout << n->val << "\n";
+    void ipreorder()
+    {
+        cout << "\nIterative Preorder Traversal : ";
+        string output = "";
+        stack<Node *> stk;
+        stk.push(root);
 
-		int a = printTree(n->left, v + 1);
-		int b = printTree(n->right, v + 1);
+        while (!stk.empty())
+        {
+            Node *n = stk.top();
+            stk.pop();
+            output = output + to_string(n->data) + " ";
+            if (n->right)
+                stk.push(n->right);
+            if (n->left)
+                stk.push(n->left);
+        }
+        cout << output;
+    }
 
-		return max(a, b);
-	}
+    void ipostorder()
+    {
+        cout << "\nIterative Postorder Traversal : ";
+        string output = "";
+        stack<Node *> stk;
+        stk.push(root);
 
-	int getMax(Node *n)
-	{
-		if (n == NULL)
-			return -1;
-		if (n->right == NULL)
-			return n->val;
+        while (!stk.empty())
+        {
+            Node *n = stk.top();
+            stk.pop();
+            output = to_string(n->data) + " " + output;
+            if (n->left)
+                stk.push(n->left);
+            if (n->right)
+                stk.push(n->right);
+        }
+        cout << output;
+    }
 
-		return getMax(n->right);
-	}
+    int printTreeAndFindHeight(Node *n, int v = 0)
+    {
+        if (n == NULL)
+            return v;
 
-	int getMin(Node *n)
-	{
-		if (n == NULL)
-			return -1;
-		if (n->left == NULL)
-			return n->val;
+        int i;
 
-		return getMin(n->left);
-	}
+        for (i = 1; i < v; i++)
+            cout << "        ";
 
-	void swap(Node *n)
-	{
-		if (n == NULL)
-			return;
+        if (v > i - 1)
+            cout << "|-----> ";
 
-		Node *tmp = n->left;
-		n->left = n->right;
-		n->right = tmp;
+        cout << n->data << "\n";
 
-		swap(n->left);
-		swap(n->right);
-	}
+        int a = printTreeAndFindHeight(n->left, v + 1);
+        int b = printTreeAndFindHeight(n->right, v + 1);
 
-	void search(Node *n, int target, int v = 0)
-	{
-		if (!n){
-			cout << "TARGET NOT FOUND";
-		}
-		if (n->val == target)
-		{
-			cout << target << " FOUND AFTER " << v+1 << " COMPARISONS, DEPTH IS " << v << "\n";
-		}
+        return max(a, b);
+    }
 
-		if (target < n->val )
-		{
-			search(n->left, target, v + 1);
-			return;
-		}
-		else if (n->right)
-		search(n->right, target, v + 1);
-	}
+    void swap(Node *n)
+    {
+        if (n == NULL)
+            return;
 
-	void preorder()
-	{
-		string output = "";
-		stack<Node *> stk;
-		stk.push(root);
+        Node *tmp = n->left;
+        n->left = n->right;
+        n->right = tmp;
 
-		while (!stk.empty())
-		{
-			Node *n = stk.top();
-			stk.pop();
-			output = output + to_string(n->val) + " ";
-			if (n->right)
-				stk.push(n->right);
-			if (n->left)
-				stk.push(n->left);
-		}
-		cout << output;
-	}
+        swap(n->left);
+        swap(n->right);
+    }
 
-	void inorder()
-	{
-		string output = "";
-		stack<Node *> stk;
-		Node *tmp = root;
-		while (!stk.empty() || tmp != NULL)
-		{
-			while (tmp != NULL)
-			{
-				stk.push(tmp);
-				tmp = tmp->left;
-			}
-			tmp = stk.top();
-			stk.pop();
-			output = output + to_string(tmp->val) + " ";
-			tmp = tmp->right;
-		}
-		cout << output;
-	}
-	void postorder()
-	{
-		string output = "";
-		stack<Node *> stk;
-		stk.push(root);
+    int getMinimum()
+    {
+        Node *curr;
+        for (curr = root; curr->left != NULL; curr = curr->left)
+        {
+            // nothing
+        }
+        return curr->data;
+    }
 
-		while (!stk.empty())
-		{
-			Node *n = stk.top();
-			stk.pop();
-			output = to_string(n->val) + " " + output;
-			if (n->left)
-				stk.push(n->left);
-			if (n->right)
-				stk.push(n->right);
-		}
-		cout << output;
-	}
+    int getMaximum()
+    {
+
+        Node *curr;
+        for (curr = root; curr->right != NULL; curr = curr->right)
+        {
+            // nothing
+        }
+        return curr->data;
+    }
 };
 
 int main()
 {
-	int arr[100];
-	int n;
-	cout << "\033[44m\033[2J";
-	cout << "How many nodes do you want to insert? : ";
-	cin >> n;
-	cout << "Enter data :";
-	for (int i = 0; i < n; i++)
-	{
-		cin >> arr[i];
-	}
-	int lenPath;
-	BinarySearchTree bst(arr, n);
-	cout << "\n\n------------------------------------------------------------------------------------------------------\n\n";
-	lenPath = bst.printTree(bst.root);
-	cout << "\n\n------------------------------------------------------------------------------------------------------\n";
 
-	cout << "\n $\t\t 1. Max value \t\t\t: " << bst.getMax(bst.root);
-	cout << "\n $\t\t 2. Min value \t\t\t: " << bst.getMin(bst.root);
-	cout << "\n $\t\t 3. Length of longest path \t: " << lenPath;
-	cout << "\n $\t\t 4. Preorder \t\t\t: ";
-	bst.preorder();
-	cout << "\n $\t\t 5. Inorder \t\t\t: ";
-	bst.inorder();
-	cout << "\n $\t\t 6. Postorder \t\t\t: ";
-	bst.postorder();
-	cout << "\n\n------------------------------------------------------------------------------------------------------\n\n";
-	cout << "\n $\t\t 7. Tree after swap \t\t: \n\n";
-	bst.swap(bst.root);
-	bst.printTree(bst.root);
-	cout << "\n\n------------------------------------------------------------------------------------------------------\n";
-	cout << "\n $\t\t 8. Preorder \t\t\t: ";
-	bst.preorder();
-	cout << "\n $\t\t 9. Inorder \t\t\t: ";
-	bst.inorder();
-	cout << "\n $\t\t10. Postorder \t\t\t: ";
-	bst.postorder();
-	cout << "\n\n------------------------------------------------------------------------------------------------------\n";
-	int m;
-	cout << "Enter search target :";
-	cin >> m;
-	bst.swap(bst.root);
-	bst.search(bst.root,m,0);
-	cout << "\033[0m";
-
-	return 0;
+    BST tree;
+    cout << "Tree : " << endl;
+    tree.printTreeAndFindHeight(tree.root);
+    cout << endl;
+    cout << "Search 15 : " << (tree.search(tree.root, 15) ? "true" : "false") << endl;
+    cout << "Minimum : " << tree.getMinimum() << endl;
+    cout << "Maximum : " << tree.getMaximum() << endl;
+    tree.swap(tree.root);
+    cout << "After swapping nodes: " << endl;
+    tree.printTreeAndFindHeight(tree.root);
+    return 0;
 }

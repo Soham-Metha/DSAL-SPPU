@@ -1,214 +1,200 @@
-#include <iostream>
-#include <iomanip>
-#include <stack>
-#define REPEAT_STR(s, lb, ub)   \
-    {                           \
-        for (lb; lb < ub; lb++) \
-            cout << s;          \
-    }
-#define REPEAT_ST(s, n)             \
-    {                               \
-        for (int i = 0; i < n; i++) \
-            cout << s;              \
-    }
+#include <bits/stdc++.h>
 
 using namespace std;
 
-string colors[] = {
-    "\033[34m",
-    "\033[31m",
-    "\033[32m",
-    "\033[34m"
-};
-const int colorCnt = 4;
-
-class Node {
-public:
+class Node
+{
+  public:
     Node *left, *right;
     int value;
 
     bool lthread;
     bool rthread;
-    Node(int val)
-        : value(val)
-        , lthread(true)
-        , rthread(true)
-        , left(NULL)
-        , right(NULL) { };
-    Node(int val, Node* l, Node* r)
-        : value(val)
-        , lthread(true)
-        , rthread(true)
-        , left(l)
-        , right(r) { };
+    Node(int val) : value(val), lthread(true), rthread(true), left(NULL), right(NULL) {};
+    Node(int val, Node *l, Node *r) : value(val), lthread(true), rthread(true), left(l), right(r) {};
+
+    bool operator==(int val)
+    {
+        return value == val;
+    }
+    bool hasLeftChild()
+    {
+        if (!left)
+            return false;
+        return !lthread;
+    }
+    bool hasRightChild()
+    {
+        if (!right)
+            return false;
+        return !rthread;
+    }
+    void addLeft(int val)
+    {
+        this->lthread = false;
+        this->left = new Node(val, this->left, this);
+    }
+    void addRight(int val)
+    {
+        this->rthread = false;
+        this->right = new Node(val, this, this->right);
+    }
+    void addLeftThread(Node *ptr)
+    {
+        this->lthread = true;
+        this->left = ptr;
+    }
+    void addRightThread(Node *ptr)
+    {
+        this->rthread = true;
+        this->right = ptr;
+    }
 };
 
-class ThreadedBinarySearchTree {
-public:
-    Node* root;
+class ThreadedBinarySearchTree
+{
+  public:
+    Node *root;
 
     ThreadedBinarySearchTree()
     {
         root = NULL;
-    }
-
-    Node* getParentOf(Node* ptr, int val)
-    {
-        if (ptr == NULL)
-            return ptr;
-
-        if (ptr->left && ptr->left->value == val)
-            return ptr;
-
-        if (ptr->right && ptr->right->value == val)
-            return ptr;
-
-        if (val < ptr->value && ptr->lthread == false)
-            return getParentOf(ptr->left, val);
-
-        else if (val < ptr->value)
-            return ptr;
-
-        if (ptr->rthread == false)
-            return getParentOf(ptr->right, val);
-        else
-            return ptr;
-    }
-
-    void insert(int val)
-    {
-        if (root == NULL) {
-            root = new Node(val);
-            return;
+        int cnt;
+        cin >> cnt;
+        while (cnt > 0)
+        {
+            int tmp;
+            cin >> tmp;
+            insert(tmp);
+            cnt -= 1;
         }
-
-        Node* par = getParentOf(root, val);
-
-        if (val <= (par->value)) {
-            par->lthread = false;
-            par->left = new Node(val, par->left, par);
-            return;
-        }
-        par->rthread = false;
-        par->right = new Node(val, par, par->right);
     }
 
-    Node* inorderSuccessor(Node* ptr)
+    Node *leftmost(Node *ptr)
     {
-        if (ptr->rthread == true)
+        for (ptr; ptr->hasLeftChild(); ptr = ptr->left)
+            ; // nothing
+        return ptr;
+    }
+
+    Node *rightmost(Node *ptr)
+    {
+        for (ptr; ptr->hasRightChild(); ptr = ptr->right)
+            ; // nothing
+        return ptr;
+    }
+    Node *inorderSuccessor(Node *ptr)
+    {
+        if (ptr->rthread)
             return ptr->right;
 
         return leftmost(ptr->right);
     }
-    Node* inorderPredecessor(Node* ptr)
+
+    Node *inorderPredecessor(Node *ptr)
     {
-        if (ptr->lthread == true)
+        if (ptr->lthread)
             return ptr->left;
 
-        ptr = ptr->left;
-        while (ptr->rthread == false)
-            ptr = ptr->right;
-        return ptr;
+        return rightmost(ptr->left);
     }
 
-    Node* leftmost(Node* ptr)
+    void getParentOf(Node *root, int val, Node **parent, Node **child)
     {
-        while (ptr->lthread == false)
-            ptr = ptr->left;
-        return ptr;
+        if (root == NULL)
+        {
+            *parent = *child = NULL;
+            return;
+        }
+
+        if (root->left && *root->left == val)
+        {
+            *parent = root;
+            *child = root->left;
+            return;
+        }
+        if (root->right && *root->right == val)
+        {
+            *parent = root;
+            *child = root->right;
+            return;
+        }
+
+        if (val < root->value && root->hasLeftChild())
+            return getParentOf(root->left, val, parent, child);
+        if (val < root->value)
+        {
+            *parent = root;
+            *child = NULL;
+        }
+
+        if (root->hasRightChild())
+            return getParentOf(root->right, val, parent, child);
+
+        *parent = root;
+        *child = NULL;
+    }
+
+    void insert(int val)
+    {
+        if (root == NULL)
+        {
+            root = new Node(val);
+            return;
+        }
+
+        Node *par, *tmp;
+        getParentOf(root, val, &par, &tmp);
+
+        if (tmp)
+            assert(0 && "THE VALUE IS ALREADY PRESENT");
+
+        if (val <= (par->value))
+            return par->addLeft(val);
+
+        par->addRight(val);
     }
 
     void inorder()
     {
-        if (root == NULL) {
-            printf("Tree is empty");
-            return;
-        }
+        assert(root);
 
-        Node* ptr = leftmost(root);
-
-        while (ptr != NULL) {
-            printf("%d ", ptr->value);
-            ptr = inorderSuccessor(ptr);
-        }
+        for (Node *ptr = leftmost(root); ptr != NULL; ptr = inorderSuccessor(ptr))
+            cout << ptr->value << " ";
     }
 
     void preorder()
     {
         string output = "";
-        stack<Node*> stk;
+        stack<Node *> stk;
         stk.push(root);
 
-        while (!stk.empty()) {
-            Node* n = stk.top();
+        while (!stk.empty())
+        {
+            Node *n = stk.top();
             stk.pop();
             output = output + to_string(n->value) + " ";
-            if (n->right && !n->rthread)
+            if (n->hasRightChild())
                 stk.push(n->right);
-            if (n->left && !n->lthread)
+            if (n->hasLeftChild())
                 stk.push(n->left);
         }
         cout << output;
     }
 
-    void displayThread(Node* n, string prefix, bool isLast = true)
-    {
-        cout << prefix
-             << "\033[37m"
-             << (isLast ? "┗━━━━━━ " : "┣━━━━━━ ")
-             << (n ? to_string(n->value) : "NULL")
-             << "\033[31m"
-             << endl;
-    }
-
-    void printTree(Node* n, string prefix = "\t", int depth = 0, bool isLast = true)
-    {
-        if (!n)
-            return;
-
-        cout << prefix;
-        if (n != root) {
-            cout << colors[depth % colorCnt]
-                 << (isLast ? "┗━━━━━━━┓ " : "┣━━━━━━━┓ ");
-            prefix += colors[depth % colorCnt];
-            prefix += isLast ? "\t" : "┃\t";
-            prefix += "\033[37m";
-        }
-
-        cout << n->value << endl;
-
-        if (n->lthread)
-            displayThread(n->left, prefix, false);
-        else
-            printTree(n->left, prefix, depth + 1, n->rthread && n->lthread);
-
-        if (n->rthread)
-            displayThread(n->right, prefix);
-        else
-            printTree(n->right, prefix, depth + 1);
-    }
-
     void delt(int dkey)
     {
-        Node* par = getParentOf(root, dkey);
-        Node* ptr = NULL;
+        Node *par;
+        Node *ptr;
+        getParentOf(root, dkey, &par, &ptr);
 
-        if (!par)
+        if (!par || !ptr)
             return;
 
-        if (par->left && (par->left->value == dkey))
-            ptr = par->left;
-
-        else if (par->right && (par->right->value == dkey))
-            ptr = par->right;
-
-        else
-            return;
-
-        if (ptr->lthread == false && ptr->rthread == false)
+        if (ptr->hasLeftChild() && ptr->hasRightChild())
             caseC(par, ptr);
 
-        else if (ptr->lthread == false || ptr->rthread == false)
+        else if (ptr->hasLeftChild() || ptr->hasRightChild())
             caseB(par, ptr);
 
         else
@@ -217,50 +203,50 @@ public:
         free(ptr);
     }
 
-    void caseA(Node* par, Node* ptr)
+    void caseA(Node *par, Node *ptr)
     {
-        if (par == NULL) {
+        if (par == NULL)
+        {
             root = NULL;
             return;
         }
 
-        if (ptr == par->left) {
-            par->lthread = true;
-            par->left = ptr->left;
-            return;
-        }
-        par->rthread = true;
-        par->right = ptr->right;
+        if (ptr == par->left)
+            par->addLeftThread(ptr->left);
+        else
+            par->addRightThread(ptr->right);
     }
 
-    void caseB(Node* par, Node* ptr)
+    void caseB(Node *par, Node *ptr)
     {
-        Node* child = (ptr->lthread == false) ? ptr->left : ptr->right;
+        Node *child = ptr->hasLeftChild() ? ptr->left : ptr->right;
 
         if (par == NULL)
+        {
             root = child;
+            return;
+        }
         else if (ptr == par->left)
             par->left = child;
         else
             par->right = child;
 
-        Node* s = inorderSuccessor(ptr);
-        Node* p = inorderPredecessor(ptr);
+        Node *s = inorderSuccessor(ptr);
+        Node *p = inorderPredecessor(ptr);
 
-        if (ptr->lthread == false)
+        if (ptr->hasLeftChild())
             p->right = s;
-
-        else if (ptr->rthread == false)
+        else if (ptr->hasRightChild())
             s->left = p;
     }
-    void caseC(Node* par, Node* ptr)
+    void caseC(Node *par, Node *ptr)
     {
-        Node* parentOfLeftMost = ptr;
+        Node *parentOfLeftMost = ptr;
 
-        Node* leftMost = ptr->right;
-        while (leftMost->left != NULL) {
+        Node *leftMost;
+        for (leftMost = ptr->right; leftMost->left != NULL; leftMost = leftMost->left)
+        {
             parentOfLeftMost = leftMost;
-            leftMost = leftMost->left;
         }
 
         ptr->value = leftMost->value;
@@ -270,26 +256,36 @@ public:
         else
             caseB(parentOfLeftMost, leftMost);
     }
+
+    void printTree(Node *n, string prefix = "       ")
+    {
+        assert(n);
+
+        cout << prefix;
+
+        if (n != root)
+        {
+            cout << "|-----> ";
+            prefix += "        ";
+        }
+
+        cout << n->value << endl;
+
+        if (n->lthread)
+            cout << prefix << "|-(LT)-> " << (n ? to_string(n->value) : "NULL") << endl;
+        else
+            printTree(n->left, prefix);
+
+        if (n->rthread)
+            cout << prefix << "|-(RT)-> " << (n ? to_string(n->value) : "NULL") << endl;
+        else
+            printTree(n->right, prefix);
+    }
 };
 
 int main()
 {
     ThreadedBinarySearchTree tbst;
-    cout << "\033[40;37m\033[2J";
-    tbst.insert(10);
-    tbst.insert(5);
-    tbst.insert(15);
-    tbst.insert(13);
-    tbst.insert(17);
-    tbst.insert(3);
-    tbst.insert(7);
-    tbst.insert(11);
-    tbst.insert(6);
-    tbst.insert(16);
-    tbst.insert(14);
-    tbst.insert(18);
-    tbst.insert(2);
-    tbst.insert(9);
     tbst.printTree(tbst.root);
     cout << " \n";
     cout << " \n";
@@ -297,7 +293,6 @@ int main()
     cout << endl;
     // tbst.delt(3);
     tbst.preorder();
-    cout << "\033[0m";
     cout << endl;
     return 0;
 }

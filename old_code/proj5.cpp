@@ -1,27 +1,30 @@
 #include <assert.h>
-#include <iostream>
 #include <string.h>
+#include <iostream>
 #define TABLE_SIZE 5
+
+#define HASH_FUNC(n, out)     \
+    {                         \
+        out = n % TABLE_SIZE; \
+    }
 
 using namespace std;
 
+template <typename int, typename string>
 class Node
 {
-  public:
+public:
     int key;
     string value;
     Node *next;
     Node(int k, string v, Node *n) : key(k), value(v), next(n) {};
-    void display()
-    {
-        cout << " { " << key << " : " << value << " }\t";
-    }
 };
 
+template <typename int, typename string>
 class HashTable
 {
-  public:
-    Node *table[TABLE_SIZE];
+public:
+    Node<int, string> *table[TABLE_SIZE];
 
     HashTable()
     {
@@ -31,68 +34,83 @@ class HashTable
 
     void insert(int key, string val)
     {
-        int index = key % TABLE_SIZE;
-        Node *node = new Node(key, val, table[index]);
+        int index;
+        HASH_FUNC(key, index);
+        Node<int, string> *node = new Node(key, val, table[index]);
         table[index] = node;
     }
 
     void search(int key)
     {
-        int index = key % TABLE_SIZE;
+        int index;
+        HASH_FUNC(key, index);
+        Node<int, string> *tmp = table[index];
 
         cout << "\n----------------------------SEARCHING--------------------------\n";
-        for (Node *tmp = table[index]; tmp != NULL; tmp = tmp->next)
+        while (tmp)
+        {
             if (tmp->key == key)
             {
                 cout << "\nFound " << tmp->key << " : " << tmp->value << "\n";
                 return;
             }
-
+            tmp = tmp->next;
+        }
         cout << "\n\nKeyError : " << key << endl;
         exit(1);
     }
     void remove(int key)
     {
-        int index = key % TABLE_SIZE;
+        int index;
+        HASH_FUNC(key, index);
 
-        Node *tmp = table[index];
+        Node<int, string> *tmp = table[index];
 
         cout << "\n----------------------------DELETION---------------------------\n";
         if (tmp->key == key)
         {
-            table[index]->display();
             table[index] = tmp->next;
+            disp(index, false);
             return;
         }
-        for (; tmp->next; tmp = tmp->next)
+
+        while (tmp->next)
+        {
             if (tmp->next->key == key)
             {
-                tmp->next->display();
                 tmp->next = tmp->next->next;
+                disp(index, false);
                 return;
             }
+            tmp = tmp->next;
+        }
 
         cout << "\n\nKeyError : " << key << endl;
         exit(1);
     }
 
-    void disp(int i = 0)
+    void disp(int i = 0, bool recursive = true)
     {
-        for (int i = 0; i < TABLE_SIZE; i++)
+        if (i == TABLE_SIZE)
+            return;
+
+        cout << "\n[     " << i << "     ]";
+        Node<int, string> *tmp = table[i];
+        while (tmp)
         {
-            cout << "\n[     " << i << "     ]";
-
-            for (Node *tmp = table[i]; tmp; tmp = tmp->next)
-                tmp->display();
-
-            cout << endl;
+            cout << " |━| " << tmp->key << " ━━━ " << tmp->value;
+            tmp = tmp->next;
         }
+        cout << endl;
+
+        if (recursive)
+            disp(i + 1);
     }
 };
 
 int main(int argc, char **argv)
 {
-    HashTable tab;
+    HashTable<int, string> tab;
     tab.insert(11, "eleven");
     tab.insert(12, "twelve");
     tab.insert(13, "thirteen");
@@ -101,7 +119,7 @@ int main(int argc, char **argv)
     tab.insert(16, "sixteen");
     tab.insert(21, "twenty one");
     tab.insert(26, "twenty six");
-
+    
     tab.disp();
     tab.search(11);
     // tab.search(25);
