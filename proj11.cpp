@@ -73,7 +73,7 @@ class MyFile
     void deleteRecord(int roll)
     {
         fopen(filename, "r");
-        FILE *temp = fopen("temp", "w");
+        FILE *temp = fopen("temp.txt", "w");
         bool found = false;
         while (fscanf(file, "%d %s %d %s\n", &S.roll, S.name, &S.div, S.address) == 4)
         {
