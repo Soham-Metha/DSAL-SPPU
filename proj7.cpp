@@ -10,7 +10,7 @@ int unionFind[MAX_VERTEX];
 class Edge
 {
   public:
-    int start,end,cost;
+    int start, end, cost;
     Edge(int s, int e, int c) : start(s), end(e), cost(c) {};
     bool operator>(Edge other)
     {
@@ -25,22 +25,6 @@ class Edge
         cout << start << " \t| " << end << " \t| " << cost << "\n";
     }
 };
-
-void InsertionSort(int edgeCount, Edge arr[])
-{
-    for (int i = 1; i < edgeCount; ++i)
-    {
-        Edge key = arr[i];
-        int j = i - 1;
-
-        while (j >= 0 && arr[j] > key)
-        {
-            arr[j + 1] = arr[j];
-            j = j - 1;
-        }
-        arr[j + 1] = key;
-    }
-}
 
 void display(int vertexCount, int edgeCount, Edge arr[])
 {
@@ -65,18 +49,8 @@ void display(int vertexCount, int edgeCount, Edge arr[])
 
 void findShortestPath(int vertexCount, int edgeCount, Edge arr[])
 {
-    //InsertionSort(edgeCount, arr);
-    for (size_t i = 0; i < edgeCount; i++)
-    {
-        arr[i].disp();
-    }
-    cout << "\n\n";
-    sort(arr,arr+edgeCount);
-    for (size_t i = 0; i < edgeCount; i++)
-    {
-        arr[i].disp();
-    }
-    cout << "\n\n";
+    // InsertionSort(edgeCount, arr);
+    sort(arr, arr + edgeCount);
     int cost = 0;
     for (size_t i = 0; i < edgeCount; i++)
     {
@@ -109,15 +83,38 @@ int main()
     Edge graph[] = {Edge(1, 2, 21), Edge(1, 3, 12), Edge(1, 4, 37), Edge(2, 4, 10),
                     Edge(3, 4, 14), Edge(3, 5, 17), Edge(4, 5, 12)};
 
-    int egdeCnt = 7;
+    int edgeCnt = 7;
     int vertexCnt = 5;
 
-    display(vertexCnt, egdeCnt, graph);
+    for (size_t i = 0; i < edgeCnt; i++)
+    {
+        graph[i].disp();
+    }
+    cout << "\n\n";
+
+    display(vertexCnt, edgeCnt, graph);
 
     cout << "Edges chosen : \n"
          << "start\t| end\t| cost\n";
-    findShortestPath(vertexCnt, egdeCnt, graph);
+    findShortestPath(vertexCnt, edgeCnt, graph);
     cout << endl;
 
     return 0;
+}
+
+// DONT NEED THIS
+void InsertionSort(int edgeCount, Edge arr[])
+{
+    for (int i = 1; i < edgeCount; ++i)
+    {
+        Edge key = arr[i];
+        int j = i - 1;
+
+        while (j >= 0 && arr[j] > key)
+        {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
 }
