@@ -28,7 +28,6 @@ class Graph
 void Graph::addEdge(string a, string b)
 {
     adjList[a].push_back(b);
-    adjList[b].push_back(a);
 }
 
 void Graph::DFS(string start)
