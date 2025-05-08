@@ -57,14 +57,14 @@ class MyFile
     {
         file = fopen(filename,"a");
         S.getData();
-        fprintf(file,"%d %s %d %s",S.roll,S.name,S.div,S.address);
+        fprintf(file,"%d %s %d %s\n",S.roll,S.name,S.div,S.address);
         fclose(file);
     }
 
     void displayRecords()
     {
         fopen(filename, "r");
-        while (fscanf(file,"%d %s %d %s", &S.roll, S.name, &S.div, S.address) == 1)
+        while (fscanf(file,"%d %s %d %s\n", &S.roll, S.name, &S.div, S.address) == 1)
         {
             S.display();
         }
