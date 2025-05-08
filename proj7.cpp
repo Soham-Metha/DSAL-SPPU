@@ -45,7 +45,7 @@ void display(int vertexCount, int edgeCount, Edge arr[])
     for (size_t i = 0; i < vertexCount; i++)
     {
         for (size_t j = 0; j < vertexCount; j++)
-            cout << adjMatrix[i][j] << "\t";
+            cout << adjMatrix[i][j] << "\t| ";
         cout << endl;
     }
 }
