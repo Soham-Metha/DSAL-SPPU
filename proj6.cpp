@@ -28,11 +28,11 @@ class Graph
 void Graph::addEdge(string a, string b)
 {
     adjList[a].push_back(b);
+    adjList[b].push_back(a);
 }
 
 void Graph::DFS(string start)
 {
-    set_default();
     visited[start] = true;
     cout << start << " ";
 
@@ -46,8 +46,6 @@ void Graph::DFS(string start)
 
 void Graph::BFS(string s)
 {
-    set_default();
-
     list<string> queue;
 
     visited[s] = true;
@@ -105,8 +103,10 @@ int main()
     cout << "Enter place :: ";
     cin >> name;
     cout << "\nDFS :: ";
+    g.set_default();
     g.DFS(name);
     cout << "\nBFS :: ";
+    g.set_default();
     g.BFS(name);
 
     return 0;
