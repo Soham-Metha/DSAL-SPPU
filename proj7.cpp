@@ -48,6 +48,7 @@ void display(int vertexCount, int edgeCount, Edge arr[])
             cout << adjMatrix[i][j] << "\t| ";
         cout << endl;
     }
+    cout << endl;
 }
 
 void findShortestPath(int vertexCount, int edgeCount, Edge arr[])
