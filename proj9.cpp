@@ -1,208 +1,224 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Node {
+class Node
+{
     int key;
     string value;
     Node *left, *right;
 
-    public:
-    Node() {
+  public:
+    Node()
+    {
         left = right = NULL;
     }
     friend class AVL;
 };
 
-class AVL {
+class AVL
+{
     Node *root = NULL;
 
-    int getHeight(Node *node) {
-        if(node == NULL)
+    int getHeight(Node *node)
+    {
+        if (node == NULL)
             return 0;
 
-        return 1 + max( getHeight(node -> left), getHeight(node -> right) );
+        return 1 + max(getHeight(node->left), getHeight(node->right));
     }
 
-    int getBalanceFactor(Node *node) {
-        if(node == NULL)  
+    int getBalanceFactor(Node *node)
+    {
+        if (node == NULL)
             return 0;
 
-        return getHeight(node -> left) - getHeight(node -> right);
+        return getHeight(node->left) - getHeight(node->right);
     }
 
-    Node* LLRotation(Node *node) {
-        Node *newRoot = node -> left;
-        newRoot -> right = node;
-        node -> left = NULL;
+    Node *LRotation(Node *node)
+    {
+        Node *newRoot = node->left;
+        newRoot->right = node;
+        node->left = NULL;
 
         return newRoot;
     }
 
-    Node *RRotation(Node *node) {
-        Node *newRoot = node -> right;
-        newRoot -> left = node;
-        node -> right = NULL;
+    Node *RRotation(Node *node)
+    {
+        Node *newRoot = node->right;
+        newRoot->left = node;
+        node->right = NULL;
 
         return newRoot;
     }
 
-    Node* RLRotation(Node *node) {                  //remember very well
-        node -> right = LLRotation(node -> right);
+    Node *RLRotation(Node *node)
+    {
+        node->right = LRotation(node->right);
         return RRotation(node);
     }
 
-    Node *LRRotation(Node *node) {                  //remember very well
-        node -> left = RRotation(node -> left);
-        return LLRotation(node);
+    Node *LRRotation(Node *node)
+    {
+        node->left = RRotation(node->left);
+        return LRotation(node);
     }
 
-    Node* balance(Node *node) {
-        if(getBalanceFactor(node) == 2 ) {
-            if(getBalanceFactor(node -> left) < 0) {
+    Node *balance(Node *node)
+    {
+        if (getBalanceFactor(node) == 2)
+            if (getBalanceFactor(node->left) < 0)
                 node = LRRotation(node);
-            }
-            else {
-                node = LLRotation(node);
-            }
-        }
-        else if(getBalanceFactor(node) == -2) {
-            if(getBalanceFactor(node -> right) < 0) {
+            else
+                node = LRotation(node);
+        else if (getBalanceFactor(node) == -2)
+            if (getBalanceFactor(node->right) < 0)
                 node = RRotation(node);
-            }
-            else {
+            else
                 node = RLRotation(node);
-            }
-        }
+
         return node;
     }
 
-    
-
-    Node* insertSubTree(Node *node, int key, string value) {
-        if(node == NULL) {
+    Node *insertNodeAndBalance(Node *node, int key, string value)
+    {
+        if (node == NULL)
+        {
             Node *newNode = new Node();
-            newNode -> key = key;
-            newNode -> value = value;
+            newNode->key = key;
+            newNode->value = value;
             return newNode;
         }
 
-        if(key < node -> key) {
-            node -> left = insertSubTree(node -> left, key, value);
-        }
-        else if(key > node -> key) {
-            node -> right = insertSubTree(node -> right, key, value);
-        }
-        else {
-            //if key already exist, update value
-            node -> value = value;
+        if (key < node->key)
+            node->left = insertNodeAndBalance(node->left, key, value);
+        else if (key > node->key)
+            node->right = insertNodeAndBalance(node->right, key, value);
+        else
+        {
+            node->value = value;
             return node;
         }
-        return balance(node);          //imp, might forget
+        return balance(node);
     }
 
-    Node* getMin(Node *root) {
-        while(root -> left != NULL) 
-            root = root -> left;
+    Node *getMin(Node *root)
+    {
+        while (root->left != NULL)
+            root = root->left;
         return root;
     }
 
-    Node* deleteSubTree(Node *root, int key) {              //VVVVV IMP
-        if(root == NULL) {
+    Node *deleteNodeAndBalance(Node *root, int key)
+    {
+        if (root == NULL)
+        {
             cout << "Key does not exist" << endl;
             return NULL;
         }
 
-        if(key < root -> key) {
-            root -> left = deleteSubTree(root -> left, key);
+        if (key < root->key)
+        {
+            root->left = deleteNodeAndBalance(root->left, key);
+            return balance(root);
         }
-        else if(key > root -> key) {
-            root -> right = deleteSubTree(root -> right, key);
+        if (key > root->key)
+        {
+            root->right = deleteNodeAndBalance(root->right, key);
+            return balance(root);
         }
-        else {
-            //case 1: leaf node
-            if(root -> left == NULL && root -> right == NULL) {
-                delete root;
-                return NULL;
-            }
-            
-            //case 2: either left or right present
-            if(root -> left == NULL) {
-                Node *temp = root -> right;
-                delete root;
-                return temp;
-            }
-            else if(root -> right == NULL) {
-                Node *temp = root -> left;
-                delete root;
-                return temp;
-            }
 
-            //case 3: both children present
-            Node *succ = getMin(root -> right);
-            root -> key = succ -> key;          //node ki value ko succ ki value bana do
-            root -> right = deleteSubTree(root -> right, succ -> key);         //aur original succ ko delete kardo
-            return root;
+        if (root->left == NULL && root->right == NULL)
+        {
+            delete root;
+            return NULL;
         }
-        return balance(root);  
+
+        if (root->left == NULL)
+        {
+            Node *temp = root->right;
+            delete root;
+            return temp;
+        }
+        else if (root->right == NULL)
+        {
+            Node *temp = root->left;
+            delete root;
+            return temp;
+        }
+
+        Node *succ = getMin(root->right);
+        root->key = succ->key;
+        root->right = deleteNodeAndBalance(root->right, succ->key);
+        return root;
     }
 
-    void inorder(Node *root) {
-        if(root == NULL)
+    void inorder(Node *root)
+    {
+        if (root == NULL)
             return;
-        
-        inorder(root -> left);
-        cout << root -> key << " ";
-        inorder(root -> right);
+
+        inorder(root->left);
+        cout << root->key << " ";
+        inorder(root->right);
     }
 
-    public:
-    void insert(int key, string value) {
-        root = insertSubTree(root, key, value);
+  public:
+    void insert(int key, string value)
+    {
+        root = insertNodeAndBalance(root, key, value);
     }
 
-    void deleteNode(int key) {
-        root = deleteSubTree(root, key);
+    void deleteNode(int key)
+    {
+        root = deleteNodeAndBalance(root, key);
     }
 
-    Node* search(int key, int &compCount) {
-        Node* curr = root;
-        //get the number of comparisons
-        while(curr != NULL) {
+    Node *search(int key, int &compCount)
+    {
+        Node *curr = root;
+        while (curr != NULL)
+        {
             compCount++;
-            if(key > curr -> key)
-                curr = curr -> right;
-            else if(key < curr -> key)
-                curr = curr -> left;
-            else    
+            if (key > curr->key)
+                curr = curr->right;
+            else if (key < curr->key)
+                curr = curr->left;
+            else
                 return curr;
         }
         return NULL;
     }
 
-    void bfs() {
+    void bfs()
+    {
         cout << "bfs: ";
-        queue<Node*> que;
+        queue<Node *> que;
         que.push(root);
 
-        while(!que.empty()) {
+        while (!que.empty())
+        {
             Node *temp = que.front();
             que.pop();
-            cout << temp -> key << " : " << temp -> value << " ";
-            if(temp -> left) que.push(temp ->left);
-            if(temp -> right) que.push(temp -> right);
-
+            cout << temp->key << " : " << temp->value << " ";
+            if (temp->left)
+                que.push(temp->left);
+            if (temp->right)
+                que.push(temp->right);
         }
         cout << endl;
     }
 
-    void iinorder() {
+    void iinorder()
+    {
         inorder(root);
         cout << endl;
-    } 
+    }
 };
 
-
-int main() {
+int main()
+{
     AVL tree;
 
     tree.insert(100, "1");
