@@ -136,7 +136,7 @@ int main()
             File.deleteRecord(R);
             break;
         }
-    } while (Choice < 6);
+    } while (Choice < 4);
     cout << endl;
     return 0;
 }
