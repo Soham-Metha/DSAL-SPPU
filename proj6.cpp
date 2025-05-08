@@ -87,16 +87,23 @@ class Graph
         string poppedNode;
         visited.push_back(startNode);
         Queue.push(startNode);
-        while (!Queue.empty())
+        while (true)
         {
-            poppedNode = Queue.front();
-            Queue.pop();
-            cout << poppedNode << " ";
-
-            Node *currNode = head;
-            bool found = false;
-            while (currNode != NULL)
+            if (!Queue.empty())
             {
+                poppedNode = Queue.front();
+                Queue.pop();
+                cout << poppedNode << " ";
+            }
+            else
+            {
+                cout << endl;
+                break;
+            }
+
+            bool found = false;
+            for (Node *currNode = head; currNode != NULL; currNode = currNode->down)
+
                 if (currNode->name == poppedNode)
                 {
                     found = true;
@@ -112,8 +119,7 @@ class Graph
                     }
                     break;
                 }
-                currNode = currNode->down;
-            }
+
             if (!found)
             {
                 cout << "Node is not present in the graph" << endl;
